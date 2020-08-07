@@ -1,0 +1,50 @@
+{
+  "name": "xinput-ffi",
+  "version": "1.0.0",
+  "description": "XInput wrapper via ffi-napi",
+  "type": "module",
+  "main": "xinput.cjs",
+  "exports": {
+    "import": "./esm.mjs",
+    "require": "./xinput.cjs"
+  },
+  "os": [
+    "win32"
+  ],
+  "engines": {
+    "node": ">=0.12"
+  },
+  "scripts": {
+    "lint": "npx eslint --ignore-path .gitignore ./**/*.{cjs,mjs}"
+  },
+  "keywords": [
+    "xinput",
+    "rumble",
+    "gamepad",
+    "ffi",
+    "napi",
+    "windows"
+  ],
+  "author": {
+    "name": "Anthony Beaumont",
+    "email": "dev.xan105@outlook.be",
+    "url": "https://xan105.com/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xan105/node-xinput-ffi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xan105/node-xinput-ffi/issues"
+  },
+  "homepage": "https://github.com/xan105/node-xinput-ffi#readme",
+  "dependencies": {
+    "ffi-napi": "^3.0.1",
+    "ref-napi": "^2.0.4",
+    "ref-struct-di": "^1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.6.0"
+  }
+}
