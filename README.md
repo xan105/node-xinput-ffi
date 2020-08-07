@@ -8,10 +8,15 @@ const XInput = require("xinput-ffi"); //CommonJS
 //OR
 import * as XInput from "xinput-ffi"; //ES Module
 
+//Check connected status for all controller
+console.log( XInput.sync.listConnected() )
+// [true,false,false,false] Only 1st gamepad is connected
+
 XInput.sync.rumble(); //Rumble 1st XInput gamepad
 XInput.sync.rumble({force: 100}); //Now with 100% force
 
-//low-frequency rumble motor(left) at 50% and high-frequency rumble motor (right) at 25%
+//low-frequency rumble motor(left) at 50% 
+//and high-frequency rumble motor (right) at 25%
 XInput.sync.rumble({force: [50,25]});
 
 (async()=>{
@@ -81,7 +86,7 @@ If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-###void setState(int lowFrequency, int highFrequency, int [gamepadIndex])
+### void setState(int lowFrequency, int highFrequency, int [gamepadIndex])
 cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
@@ -97,7 +102,7 @@ Both are done for you with **rumble()** see below...
 
 > The following are sugar functions based upon previous functions.
 
-###void rumble(obj [option])
+### void rumble(obj [option])
 This function is used to activate the vibration function of a controller.<br />
 
 options:
