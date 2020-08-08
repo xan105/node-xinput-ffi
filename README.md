@@ -22,7 +22,7 @@ XInput.sync.rumble({force: [50,25]});
 (async()=>{
 
   //Rumble 2nd XInput gamepad shortly for 1sec
-  XInput.rumble({duration: 1000, gamepadIndex: 1});
+  await XInput.rumble({duration: 1000, gamepadIndex: 1});
 
   const state = await XInput.getState();
   console.log(state);
