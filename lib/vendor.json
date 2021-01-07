@@ -1,0 +1,39 @@
+[
+	{
+		"name": "Microsoft Corp.",
+		"id": "045E",
+		"controller": [
+			{"id": "028E", "name": "Xbox360 Controller"},
+			{"id": "028F", "name": "Xbox360 Wireless Controller"},
+			{"id": "0202", "name": "Xbox Controller"},
+			{"id": "0285", "name": "Xbox Controller S"},
+			{"id": "0289", "name": "Xbox Controller S"},
+			{"id": "02E3", "name": "Xbox One Elite Controller"},
+			{"id": "02EA", "name": "Xbox One S Controller"},
+			{"id": "02FD", "name": "Xbox One S Controller"},
+			{"id": "02D1", "name": "Xbox One Controller"},
+			{"id": "02DD", "name": "Xbox One Controller"}
+		]
+	},
+	{
+		"name": "Sony Corp.",
+		"id": "054C",
+		"controller": [
+			{"id": "0268", "name": "DualShock 3 / Sixaxis"},
+			{"id": "05C4", "name": "DualShock 4"},
+			{"id": "09CC", "name": "DualShock 4"}
+		]
+	},
+	{
+		"name": "Nintendo Co., Ltd",
+		"id": "057E",
+		"controller": [
+			{"id": "0337", "name": "Wii U GameCube Controller Adapter"},
+			{"id": "2006", "name": "Joy-Con L"},
+			{"id": "2007", "name": "Joy-Con R"},
+			{"id": "2009", "name": "Switch Pro Controller"},
+			{"id": "200E", "name": "Joy-Con Charging Grip"},
+			{"id": "0306", "name": "Wii Remote Controller"}
+		]
+	}
+]
