@@ -1,8 +1,9 @@
 "use strict";
 
-const XInput = require("../xinput.cjs");
+const XInput = require("../lib/xinput.cjs");
 
-const available_gamepad = XInput.sync.listConnected();console.log(available_gamepad); //ok
+const available_gamepad = XInput.sync.listConnected();
+console.log(available_gamepad); //ok
 
 /*
 const isConnected = XInput.sync.isConnected(0); //ok

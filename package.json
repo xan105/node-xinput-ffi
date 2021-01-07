@@ -1,12 +1,12 @@
 {
   "name": "xinput-ffi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "XInput wrapper via ffi-napi",
   "type": "module",
-  "main": "xinput.cjs",
+  "main": "./lib/xinput.cjs",
   "exports": {
-    "import": "./esm.mjs",
-    "require": "./xinput.cjs"
+    "import": "./lib/esm.mjs",
+    "require": "./lib/xinput.cjs"
   },
   "os": [
     "win32"
@@ -15,7 +15,8 @@
     "node": ">=0.12"
   },
   "scripts": {
-    "lint": "npx eslint --ignore-path .gitignore ./**/*.{cjs,mjs}"
+    "lint": "npx eslint --ignore-path .gitignore ./**/*.{cjs,mjs}",
+    "pretty": "npx prettier --write ./**/*.{cjs,mjs}"
   },
   "keywords": [
     "xinput",
@@ -45,6 +46,8 @@
     "ref-struct-di": "^1.1.1"
   },
   "devDependencies": {
-    "eslint": "^7.6.0"
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.15.0",
+    "prettier": "^2.2.0"
   }
 }
