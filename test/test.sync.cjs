@@ -5,6 +5,9 @@ const XInput = require("../lib/xinput.cjs");
 const available_gamepad = XInput.sync.listConnected();
 console.log(available_gamepad); //ok
 
+console.log(XInput.sync.GetBatteryInformation());
+console.log(XInput.sync.GetCapabilities());
+
 /*
 const isConnected = XInput.sync.isConnected(0); //ok
 const isConnected = XInput.sync.isConnected(); //ok
