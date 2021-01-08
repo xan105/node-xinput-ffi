@@ -210,6 +210,49 @@ Both are done for you with **rumble()** see below...
 
 > The following are sugar functions based upon previous functions.
 
+### obj getButtonsDown(int [gamepadIndex])
+getState() wrapper to know more easily which buttons are pressed if any. Also returns the rest of getState() information for convenience.
+
+gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+
+Returns an object where:
+- int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
+- []string buttons : list of currently pressed [buttons](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
+- int trigger.left/right : The current value of the left/right trigger analog control. The value is between 0 and 255.
+- int thumb.left/right.x/y : Left/right thumbstick x/y axis value. Each of the thumbstick axis members is between -32768 and 32767. A value of 0 is centered. Negative values signify down or to the left. Positive values signify up or to the right.
+
+Electron example:
+```js
+
+let state = {
+	previous : 0,
+	current : 0
+};
+
+function inputLoop(){
+
+	XInput.getButtonsDown()
+	.then((controller)=>{
+		
+		state.current = controller.packetNumber; 
+		
+		if (state.current > state.previous){ //State update
+			console.log(controller.buttons)
+		}
+		
+		state.previous = state.current;
+
+	})
+	.catch((err)=>{
+		console.warn(err);
+	})
+	.finally(()=>{
+		window.requestAnimationFrame(inputLoop); 
+	});
+}
+window.requestAnimationFrame(inputLoop);
+```
+
 ### void rumble(obj [option])
 This function is used to activate the vibration function of a controller.<br />
 
