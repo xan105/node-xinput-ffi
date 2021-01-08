@@ -321,3 +321,5 @@ Compatibility
 - Windows 8: xinput1_4
 - Windows 7 (DirectX SDK): xinput1_3
 - Windows Vista (Legacy): xinput9_1_0
+
+Identify device requires PowerShell
