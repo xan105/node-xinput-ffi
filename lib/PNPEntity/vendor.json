@@ -21,7 +21,8 @@
 		"controller": [
 			{"id": "0268", "name": "DualShock 3 / Sixaxis"},
 			{"id": "05C4", "name": "DualShock 4"},
-			{"id": "09CC", "name": "DualShock 4"}
+			{"id": "09CC", "name": "DualShock 4"},
+			{"id": "0BA0", "name": "DualShock 4 USB Wireless Adaptor"}
 		]
 	},
 	{
