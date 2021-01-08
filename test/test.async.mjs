@@ -5,7 +5,8 @@ import * as XInput from "../lib/esm.mjs";
   console.log(available_gamepad); //ok
   //const isConnected = await XInput.isConnected();console.log(isConnected); //ok
 
-  console.log(await XInput.identifyAllConnectedDevices());
+  console.log(await XInput.identify.knownDevices());
+  console.log(await XInput.identify.XInputDevices());
 
   /*async queue ok
   XInput.rumble()
