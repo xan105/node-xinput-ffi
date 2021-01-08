@@ -171,9 +171,8 @@ If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-💡 If you need to know which wButtons value is which button name. You can see it in `lib/code.cjs > BUTTONS`.<br/>
-I did not 'translate' them for backwards compatibility.<br/>
-They are also listed [here](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members) 
+💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS]((https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members))
+You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex) for this (see below in helper fn ...)
 
 Output example
 ```js
@@ -202,7 +201,7 @@ NB:
 - You need to keep the event-loop alive otherwise the vibration will terminate with your program.<br />
 - You need to reset the state to 0 for both frequency before using setState again.<br />
 
-Both are done for you with **rumble()** see below...
+Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#void-rumbleobj-option) (see below in Helper fn...)
 
 <hr>
 
