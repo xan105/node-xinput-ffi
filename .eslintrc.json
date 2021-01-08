@@ -17,7 +17,8 @@
       "no-alert": "warn",
       "no-eval": "error",
       "require-await": "warn",
-      "strict": "error"
+      "strict": "error",
+      "no-useless-escape": "warn"
     },
     "overrides": [
       {

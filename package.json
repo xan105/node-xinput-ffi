@@ -24,7 +24,9 @@
     "gamepad",
     "ffi",
     "napi",
-    "windows"
+    "windows",
+    "vid",
+    "pid"
   ],
   "author": {
     "name": "Anthony Beaumont",
