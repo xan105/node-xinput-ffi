@@ -171,7 +171,7 @@ If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS]((https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members))
+💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
 You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex) for this (see below in helper fn ...)
 
 Output example
