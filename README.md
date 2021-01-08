@@ -109,7 +109,6 @@ API
 ## XInput fn 
 cf: https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
-
 ### void enable(bool enable)
 cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable) (1_4,1_3)<br />
 Enable/Disable all XInput gamepads.
@@ -130,6 +129,14 @@ Returns an object like a [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com
 
 💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
 
+Output example
+```js
+{
+  BatteryType: 'BATTERY_TYPE_WIRED',
+  BatteryLevel: 'BATTERY_LEVEL_FULL'
+}
+```
+
 ### obj GetCapabilities(int [gamepadIndex])
 cf: [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities) (1_4,1_3,9_1_0)<br />
 Retrieves the capabilities and features of the specified controller.
@@ -144,6 +151,15 @@ But without :
 - XINPUT_VIBRATION Vibration
 
 💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
+
+Output example
+```js
+{
+  Type: 'XINPUT_DEVTYPE_GAMEPAD',
+  SubType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
+  Flags: 12
+}
+```
  
 ### obj getState(int [gamepadIndex])
 cf: [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate) (1_4,1_3,9_1_0)<br />
@@ -155,9 +171,24 @@ If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-💡 If you need to know which wButtons value is which button name. You can see it in `lib/code.cjs > BUTTONS`.
-I did not 'translate' them for backwards compatibility.
+💡 If you need to know which wButtons value is which button name. You can see it in `lib/code.cjs > BUTTONS`.<br/>
+I did not 'translate' them for backwards compatibility.<br/>
 They are also listed [here](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members) 
+
+Output example
+```js
+    {
+      dwPacketNumber: 322850,
+      Gamepad: { wButtons: 0,
+        bLeftTrigger: 0,
+        bRightTrigger: 0,
+        sThumbLX: 128,
+        sThumbLY: 641,
+        sThumbRX: -1156,
+        sThumbRY: -129
+      }
+    }
+```
 
 ### void setState(int lowFrequency, int highFrequency, int [gamepadIndex])
 cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
@@ -203,6 +234,7 @@ eg: [true,false,false,false] //Only 1st gamepad is connected
 ## Identify device (VID,PID,GUID,Name, ...)
 
 ⚠️ The following functions are only available as Promise.
+
 Since XINPUT doesn't provide VID/PID by design, query WMI _Win32_PNPEntity_ via PowerShell.
 
 > method starts with **identify**._name_
@@ -235,8 +267,9 @@ console.log ( await XInput.identify.XInputDevices() )
 ]
 ```
 
-### []obj XInputDevices(void)
+### []obj knownDevices(void)
 List all **known** HID and USB connected devices **by matching with entries in** `lib/PNPEntity/vendor.json`
+
 ⚠️ Unlike the previous function if it's not in vendor.json it won't be listed **but** other devices than XInput such as DirectInput, HID only powered device will (= Not XInput exclusive). 
 
 Return an array of obj where
