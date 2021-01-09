@@ -171,9 +171,6 @@ If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
-You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex) for this (see below in helper fn ...)
-
 Output example
 ```js
     {
@@ -188,6 +185,12 @@ Output example
       }
     }
 ```
+
+💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
+You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex) for this (see below in helper fn ...)
+
+💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
+This is also done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex)
 
 ### void setState(int lowFrequency, int highFrequency, int [gamepadIndex])
 cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
@@ -211,22 +214,35 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 ### obj getButtonsDown(obj [option])
 getState() wrapper to know more easily which buttons are pressed if any.
-Also returns the rest of getState() information normalized for convenience such as 
-ThumbStick position, magnitude, direction (taking the deadzone into account).
-Trigger state and force (taking threshold into account).
+
+Also returns the rest of getState() information normalized for convenience such as<br/> 
+ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
+Trigger state and force (taking threshold into account).<br/> 
 
 options:
-	- gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
-	- deadzone: thumbstick deadzone(s)
-				Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]
-				_defaults to XInput default's values of [7849,8689]_
-	- directionThreshold: float [0.0,1.0] to handle cardinal direction.
-						  Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".
-						  Otherwise add "RIGHT", "LEFT", "UP", "DOWN" to the previous using threshold to 
-						  differentiate the 2 axes by using range of [-threshold,threshold].
-						  _defaults to 0.2_
-	- triggerThreshold: int [0,255] trigger activation threshold.
-						_defaults to XInput value of 30_
+
+- gamepadIndex: 
+
+Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+
+- deadzone: 
+
+thumbstick deadzone(s)<br/>
+Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]<br/>
+_defaults to XInput default's values of [7849,8689]_<br/> 
+	    
+- directionThreshold: 
+
+float [0.0,1.0] to handle cardinal direction.<br/>
+ Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".<br/>
+Otherwise add "RIGHT", "LEFT", "UP", "DOWN" to the previous using threshold to <br/>
+differentiate the 2 axes by using range of [-threshold,threshold].<br/>
+_defaults to 0.2_<br/>
+		      
+- triggerThreshold: 
+
+int [0,255] trigger activation threshold.<br/>
+ _defaults to XInput value of 30_<br/>
 
 Returns an object where:
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
@@ -261,8 +277,10 @@ function inputLoop(){
 			console.log(controller.thumb.right.direction);
 			
 			//Current trigger status
-			if (controller.trigger.left.active) console.log(`trigger L (${controller.trigger.left.force})`);
-			if (controller.trigger.right.active) console.log(`trigger R (${controller.trigger.right.force})`);
+			if (controller.trigger.left.active) 
+				console.log(`trigger L (${controller.trigger.left.force})`);
+			if (controller.trigger.right.active) 
+				console.log(`trigger R (${controller.trigger.right.force})`);
 			
 		}
 		
