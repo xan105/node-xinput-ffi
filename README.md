@@ -209,24 +209,41 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 > The following are sugar functions based upon previous functions.
 
-### obj getButtonsDown(int [gamepadIndex])
-getState() wrapper to know more easily which buttons are pressed if any. Also returns the rest of getState() information for convenience.
+### obj getButtonsDown(obj [option])
+getState() wrapper to know more easily which buttons are pressed if any.
+Also returns the rest of getState() information normalized for convenience such as 
+ThumbStick position, magnitude, direction (taking the deadzone into account).
+Trigger state and force (taking threshold into account).
 
-gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+options:
+	- gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+	- deadzone: thumbstick deadzone(s)
+				Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]
+				_defaults to XInput default's values of [7849,8689]_
+	- directionThreshold: float [0.0,1.0] to handle cardinal direction.
+						  Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".
+						  Otherwise add "RIGHT", "LEFT", "UP", "DOWN" to the previous using threshold to 
+						  differentiate the 2 axes by using range of [-threshold,threshold].
+						  _defaults to 0.2_
+	- triggerThreshold: int [0,255] trigger activation threshold.
+						_defaults to XInput value of 30_
 
 Returns an object where:
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
 - []string buttons : list of currently pressed [buttons](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
-- int trigger.left/right : The current value of the left/right trigger analog control. The value is between 0 and 255.
-- int thumb.left/right.x/y : Left/right thumbstick x/y axis value. Each of the thumbstick axis members is between -32768 and 32767. A value of 0 is centered. Negative values signify down or to the left. Positive values signify up or to the right.
+- trigger.left/right :
+	+ bool active : is the trigger pressed down ? (below triggerThreshold will not set active to true)
+	+ int force : by how much ? [0,255]
+- thumb.left/right :
+	+ float x: normalized (deadzone) x axis [0.0,1.0]. 0 is centered. Negative values is left. Positive values is right.
+	+ float y: normalized (deadzone) y axis [0.0,1.0]. 0 is centered. Negative values is down. Positive values is up.
+	+ float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
+	+ []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
 
 Electron example:
 ```js
 
-let state = {
-	previous : 0,
-	current : 0
-};
+let state = { previous : 0, current : 0 };
 
 function inputLoop(){
 
@@ -236,7 +253,17 @@ function inputLoop(){
 		state.current = controller.packetNumber; 
 		
 		if (state.current > state.previous){ //State update
+			//Current buttons down
 			console.log(controller.buttons)
+			
+			//Current thumbstick direction
+			console.log(controller.thumb.left.direction);
+			console.log(controller.thumb.right.direction);
+			
+			//Current trigger status
+			if (controller.trigger.left.active) console.log(`trigger L (${controller.trigger.left.force})`);
+			if (controller.trigger.right.active) console.log(`trigger R (${controller.trigger.right.force})`);
+			
 		}
 		
 		state.previous = state.current;
@@ -252,6 +279,34 @@ function inputLoop(){
 window.requestAnimationFrame(inputLoop);
 ```
 
+NB: To handle button up (press down then release)<br/>
+ignoring hold button until they are released<br/>
+You should store the previous buttons state and check it against the current.<br/>
+
+Example:		
+```js
+
+let state = {
+	previous : {
+		packetNumber: 0,
+		buttons: []
+	}, current : {}
+};
+
+function inputLoop(){
+
+	XInput.getButtonsDown()
+	.then((controller)=>{
+	
+		state.current = controller;
+		if (state.current.packetNumber > state.previous.packetNumber){ //State update		
+			const diff = state.previous.buttons.filter(btn => !state.current.buttons.includes(btn)) 
+			console.log(diff);
+		}
+		
+		...
+```
+			
 ### void rumble(obj [option])
 This function is used to activate the vibration function of a controller.<br />
 
@@ -290,7 +345,7 @@ Return an array of obj where
 - string pid : product id
 - []string interfaces : PNPentity interface(s) found (eg: HID, USB, ...)
 - string|null manufacturer: The PNPentity's manufacturer. _Null_ when non-english local generic value like "(something)". If the manufacturer is _Null_ but the vid is known in `lib/PNPEntity/vendor.json` then it will be replaced.
-- [string name] : If found, the device name from `lib/PNPEntity/vendor.json`
+- string [name] : If found, the device name from `lib/PNPEntity/vendor.json`
 
 💡 obj are unique by their guid
 
