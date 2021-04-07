@@ -334,7 +334,7 @@ options:
             _defaults to [50,25]_
   - duration: Rumble duration in ms. Max: 2500 ms. _defaults to max_
   - forceEnableGamepad: Use **enable()** to force the activation of XInput gamepad before rumble. _defaults to false_
-  - forceStateWhileRumble: Bruteforce_-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
+  - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
   - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
 ### bool isConnected(int [gamepadIndex])
