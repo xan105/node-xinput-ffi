@@ -23,4 +23,10 @@ import * as XInput from "../lib/esm.mjs";
   //await XInput.setState(50,50,0);setTimeout(()=>{XInput.enable(false)},500); //rumble interrupt after 500ms->ok
 
   //await XInput.rumble({force: 50});await XInput.enable(false); //no interrupt->ok
+  
+  await XInput.rumble();
+  setTimeout(async()=>{
+    await XInput.rumble({forceStateWhileRumble: true});
+  },1000)
+  
 })().catch(console.error);
