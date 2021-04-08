@@ -1,6 +1,6 @@
 {
   "name": "xinput-ffi",
-  "version": "1.2.1",
+  "version": "1.2.4",
   "description": "XInput wrapper via ffi-napi",
   "type": "module",
   "main": "./lib/xinput.cjs",
@@ -43,8 +43,8 @@
   },
   "homepage": "https://github.com/xan105/node-xinput-ffi#readme",
   "dependencies": {
-    "ffi-napi": "^3.0.1",
-    "ref-napi": "^2.0.4",
+    "ffi-napi": "^4.0.3",
+    "ref-napi": "^3.0.2",
     "ref-struct-di": "^1.1.1"
   },
   "devDependencies": {
