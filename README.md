@@ -68,7 +68,7 @@ console.log(await XInput.listConnected());
 //Identify connected XInput devices
 console.log (await XInput.identify({XInputOnly: true})); 
 /* Output:
-	[
+  [
     {
       manufacturer: 'Microsoft Corp.',
       name: 'Xbox360 Controller',
@@ -81,7 +81,7 @@ console.log (await XInput.identify({XInputOnly: true}));
         '{d61ca365-5af4-4486-998b-9db4734c6ca3}'
       ]
     }
-	]
+  ]
 */
 ```
 
@@ -107,7 +107,7 @@ XInput.isConnected() //Sync
 
 ## Named export
 
-### XInput fn 
+### 1️⃣ XInput fn 
 cf: https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
 #### enable
@@ -219,7 +219,7 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 <hr>
 
-### Helper fn
+### 2️⃣ Helper fn
 The following are sugar functions based upon previous functions (XInput fn).
 
 #### getButtonsDown
@@ -365,7 +365,7 @@ eg: [true,false,false,false] //Only 1st gamepad is connected
 
 <hr>
 
-### Identify device (VID,PID,GUID,Name, ...)
+### 3️⃣ Identify device (VID,PID,GUID,Name, ...)
 
 ⚠️ The following are only available as Promise.
 
