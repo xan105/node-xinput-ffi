@@ -1,129 +1,134 @@
-XInput wrapper via [ffi-napi](https://www.npmjs.com/package/ffi-napi)
+About
+=====
+
+XInput wrapper via [node-ffi-napi](https://www.npmjs.com/package/ffi-napi).
 
 Quick Examples
 ==============
 
+Vibration
+
 ```js
-const XInput = require("xinput-ffi"); //CommonJS
-//OR
-import * as XInput from "xinput-ffi"; //ES Module
+import { rumble } from "xinput-ffi/promises";
 
-//Check connected status for all controller
-console.log( XInput.sync.listConnected() )
-// [true,false,false,false] Only 1st gamepad is connected
+//Rumble 1st XInput gamepad
+await rumble();
 
-XInput.sync.rumble(); //Rumble 1st XInput gamepad
-XInput.sync.rumble({force: 100}); //Now with 100% force
+//Now with 100% force
+await rumble({force: 100}); 
 
 //low-frequency rumble motor(left) at 50% 
 //and high-frequency rumble motor (right) at 25%
-XInput.sync.rumble({force: [50,25]});
+await rumble({force: [50,25]});
+```
 
-//Promises
-(async()=>{
+Direct use of XInput functions
 
-  //Rumble 2nd XInput gamepad shortly for 1sec
-  await XInput.rumble({duration: 1000, gamepadIndex: 1});
+```js
+import { promises as XInput } from "xinput-ffi";
 
-  const state = await XInput.getState();
-  console.log(state);
-  /* Output:
-    {
-      dwPacketNumber: 322850,
-      Gamepad: { wButtons: 0,
-        bLeftTrigger: 0,
-        bRightTrigger: 0,
-        sThumbLX: 128,
-        sThumbLY: 641,
-        sThumbRX: -1156,
-        sThumbRY: -129
-      }
+const state = await XInput.getState();
+console.log(state);
+/* Output:
+  {
+    dwPacketNumber: 322850,
+    Gamepad: { wButtons: 0,
+      bLeftTrigger: 0,
+      bRightTrigger: 0,
+      sThumbLX: 128,
+      sThumbLY: 641,
+      sThumbRX: -1156,
+      sThumbRY: -129
     }
-  */
+  }
+*/
   
-  //Set 1st XInput gamepad state to 50% left/right; 
-  //Wait 2sec; Reset state to idle
-  await XInput.setState(50,50);
-  await new Promise(resolve => setTimeout(resolve, 2000)).catch(()=>{});
-  await XInput.setState(0,0);
+//Set 1st XInput gamepad state to 50% left/right; 
+//Wait 2sec; Reset state to idle
+await XInput.setState(50,50);
+await new Promise(resolve => setTimeout(resolve, 2000)).catch(()=>{});
+await XInput.setState(0,0);
   
-  //Set 1st XInput gamepad state to 50% left/right; 
-  //Wait 500ms and disable all XInput gamepads
-  await XInput.setState(50,50);
-  await new Promise(resolve => setTimeout(resolve, 500)).catch(()=>{});
-  await XInput.enable(false);
-  
-  //Identify all connected XInput devices
-  console.log ( await XInput.identify.XInputDevices() ); 
-  /* Output:
-	[
-	  {
-		guid: '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
-		vid: '045E',
-		pid: '028E',
-		interfaces: [ 'USB', 'HID' ],
-		manufacturer: 'Microsoft Corp.',
-		name: 'Xbox360 Controller'
-	  },...
-	]
-  */
-  
-  //Identify all known HID,USB connected devices
-  console.log ( await XInput.identify.knownDevices() );
-  /* Output:
-	[
-	  {
-		manufacturer: 'Sony Corp.',
-		name: 'DualShock 4 USB Wireless Adaptor',
-		vid: '054C',
-		pid: '0BA0',
-		interfaces: [ 'USB', 'HID' ],
-		guid: [
-		  '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
-		  '{36fc9e60-c465-11cf-8056-444553540000}',
-		  '{4d36e96c-e325-11ce-bfc1-08002be10318}'
-		],
-		xinput: false
-	  },...
-	]
-  */
+//Set 1st XInput gamepad state to 50% left/right; 
+//Wait 500ms and disable all XInput gamepads
+await XInput.setState(50,50);
+await new Promise(resolve => setTimeout(resolve, 500)).catch(()=>{});
+await XInput.enable(false);
+```
 
-})().catch(console.error);
+Misc
 
+```js 
+import { promises as XInput } from "xinput-ffi";
+
+//Check connected status for all controller
+console.log(await XInput.listConnected());
+// [true,false,false,false] Only 1st gamepad is connected
+  
+//Identify connected XInput devices
+console.log (await XInput.identify({XInputOnly: true})); 
+/* Output:
+	[
+    {
+      manufacturer: 'Microsoft Corp.',
+      name: 'Xbox360 Controller',
+      vid: '045E',
+      pid: '028E',
+      xinput: true,
+      interfaces: [ 'USB', 'HID' ],
+      guid: [
+        '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
+        '{d61ca365-5af4-4486-998b-9db4734c6ca3}'
+      ]
+    }
+	]
+*/
 ```
 
 Installation
 ============
 
-```npm install xinput-ffi```
+`npm install xinput-ffi`
 
-Prequisites: C/C++ build tools (Visual Studio) and Python 2.7 (node-gyp) in order to build [ffi-napi](https://www.npmjs.com/package/ffi-napi).
+_Prerequisite: C/C++ build tools and Python 3.x (node-gyp) in order to build [node-ffi-napi](https://www.npmjs.com/package/ffi-napi)._
 
 API
 ===
 
-> sync method starts with **sync**._name_ otherwise it's a promise.
+⚠️ This module is only available as an ECMAScript module (ESM) starting with version 2.0.0.<br />
+Previous version(s) are CommonJS (CJS) with an ESM wrapper.
 
-💡 I recommend you do use promise so that you will not block Node's event loop.
+💡 Promises are under the `promises` namespace.
+```js
+import * as XInput from 'xinput-ffi';
+XInput.promises.isConnected() //Promise
+XInput.isConnected() //Sync
+```
 
-## XInput fn 
+## Named export
+
+### XInput fn 
 cf: https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
-### void enable(bool enable)
+#### enable
+`(enable: bool): void`
+
 cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable) (1_4,1_3)<br />
 Enable/Disable all XInput gamepads.
 
 NB:
  - Stop any rumble currently playing when set to false.
- - setState will throw "ERROR_DEVICE_NOT_CONNECTED" when set to false.
+ - setState will throw "ERR_DEVICE_NOT_CONNECTED" when set to false.
  
-### obj GetBatteryInformation(int [gamepadIndex]) 
+#### GetBatteryInformation
+`(gamepadIndex?: number): obj`
+
 cf: [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation) (1_4)<br />
 Retrieves the battery type and charge status of the specified controller.
 
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
 gamepadIndex defaults to 0 (1st XInput gamepad)<br />
-If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
+If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_battery_information) structure.
 
@@ -137,7 +142,9 @@ Output example
 }
 ```
 
-### obj GetCapabilities(int [gamepadIndex])
+#### GetCapabilities
+`(gamepadIndex?: number): obj`
+
 cf: [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities) (1_4,1_3,9_1_0)<br />
 Retrieves the capabilities and features of the specified controller.
 
@@ -161,7 +168,9 @@ Output example
 }
 ```
  
-### obj getState(int [gamepadIndex])
+#### getState
+`(gamepadIndex?: number): obj`
+
 cf: [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate) (1_4,1_3,9_1_0)<br />
 Retrieves the current state of the specified controller.
 
@@ -192,7 +201,9 @@ You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-get
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
 This is also done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex)
 
-### void setState(int lowFrequency, int highFrequency, int [gamepadIndex])
+#### setState
+`(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
+
 cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
@@ -208,18 +219,19 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 <hr>
 
-## Helper fn
+### Helper fn
+The following are sugar functions based upon previous functions (XInput fn).
 
-> The following are sugar functions based upon previous functions.
+#### getButtonsDown
+`(option?: obj): obj`
 
-### obj getButtonsDown(obj [option])
 getState() wrapper to know more easily which buttons are pressed if any.
 
 Also returns the rest of getState() information normalized for convenience such as<br/> 
 ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
 Trigger state and force (taking threshold into account).<br/> 
 
-options:
+⚙️ options:
 
 - gamepadIndex: 
 
@@ -256,7 +268,7 @@ Returns an object where:
 	+ float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
 	+ []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
 
-Electron example:
+📖 Electron example:
 ```js
 
 let state = { previous : 0, current : 0 };
@@ -325,10 +337,12 @@ function inputLoop(){
 		...
 ```
 			
-### void rumble(obj [option])
+#### rumble
+`(option?: obj): void`
+
 This function is used to activate the vibration function of a controller.<br />
 
-options:
+⚙️ options:
   - force : Rumble force to apply to the motors. 
             Either an integer (both motor with the same value) or an array of 2 integer: [left,right]
             _defaults to [50,25]_
@@ -337,56 +351,36 @@ options:
   - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
   - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
-### bool isConnected(int [gamepadIndex])
+#### isConnected
+`(gamepadIndex?: number): bool`
+
 whether the specified controller is connected or not.<br />
 Returns true/false
 
-### Array listConnected(void)
+#### listConnected
+`(): bool[]`
+
 Returns an array of connected status for all controller.<br />
 eg: [true,false,false,false] //Only 1st gamepad is connected
 
 <hr>
 
-## Identify device (VID,PID,GUID,Name, ...)
+### Identify device (VID,PID,GUID,Name, ...)
 
-⚠️ The following functions are only available as Promise.
+⚠️ The following are only available as Promise.
 
-Since XINPUT doesn't provide VID/PID by design, query WMI _Win32_PNPEntity_ via PowerShell.
+Since XINPUT doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.
+It won't tell you which is connected to which XInput slot tho.
 
-> method starts with **identify**._name_
 
-### []obj XInputDevices(void)
-List all connected **XInput** device information.
+#### identify
+`(option?: obj): obj[]`
 
-Return an array of obj where
-- string guid : the classguid (unique)
-- string vid : vendor id
-- string pid : product id
-- []string interfaces : PNPentity interface(s) found (eg: HID, USB, ...)
-- string|null manufacturer: The PNPentity's manufacturer. _Null_ when non-english local generic value like "(something)". If the manufacturer is _Null_ but the vid is known in `lib/PNPEntity/vendor.json` then it will be replaced.
-- string [name] : If found, the device name from `lib/PNPEntity/vendor.json`
+List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
 
-💡 obj are unique by their guid
+⚙️ options:
 
-Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrapper_):
-```js
-console.log ( await XInput.identify.XInputDevices() )
-[
-	{
-		guid: '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
-		vid: '045E',
-		pid: '028E',
-		interfaces: [ 'USB', 'HID' ],
-		manufacturer: 'Microsoft Corp.',
-		name: 'Xbox360 Controller'
-	}
-]
-```
-
-### []obj knownDevices(void)
-List all **known** HID and USB connected devices **by matching with entries in** `lib/PNPEntity/vendor.json`
-
-⚠️ Unlike the previous function if it's not in vendor.json it won't be listed **but** other devices than XInput such as DirectInput, HID only powered device will (= Not XInput exclusive). 
+- XInputOnly: Return only XInput gamepad. _defaults to true_
 
 Return an array of obj where
 - string manufacturer : vendor name
@@ -400,37 +394,6 @@ Return an array of obj where
 💡 obj are unique by their vid/pid
 
 Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrapper_):
-```js
-console.log ( await XInput.identify.knownDevices() )
-[
-  {
-    manufacturer: 'Sony Corp.',
-    name: 'DualShock 4 USB Wireless Adaptor',
-    vid: '054C',
-    pid: '0BA0',
-    interfaces: [ 'USB', 'HID' ],
-    guid: [
-      '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
-      '{36fc9e60-c465-11cf-8056-444553540000}',
-      '{4d36e96c-e325-11ce-bfc1-08002be10318}'
-    ],
-    xinput: false
-  },
-  {
-    manufacturer: 'Microsoft Corp.',
-    name: 'Xbox360 Controller',
-    vid: '045E',
-    pid: '028E',
-    interfaces: [ 'USB', 'HID' ],
-    guid: [
-      '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
-      '{d61ca365-5af4-4486-998b-9db4734c6ca3}'
-    ],
-    xinput: true
-  }
-]
-```
-
 ```js
 [
   {
@@ -481,4 +444,4 @@ Compatibility
 - Windows 7 (DirectX SDK): xinput1_3
 - Windows Vista (Legacy): xinput9_1_0
 
-Identify device requires PowerShell
+Identify device requires PowerShell.
