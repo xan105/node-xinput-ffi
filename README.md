@@ -210,7 +210,7 @@ NB:
 - You need to keep the event-loop alive otherwise the vibration will terminate with your program.<br />
 - You need to reset the state to 0 for both frequency before using setState again.<br />
 
-Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#void-rumbleobj-option) (see below in Helper fn...)
+Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-obj-void) (see below in Helper fn...)
 
 <hr>
 
