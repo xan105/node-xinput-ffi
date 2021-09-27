@@ -1,6 +1,4 @@
-"use strict";
-
-const XInput = require("../lib/xinput.cjs");
+import { promises as XInput } from "../lib/esm.js";
 
 let state = {
 	previous : {
@@ -14,7 +12,7 @@ function inputLoop(){
 
 	XInput.getButtonsDown({
 		directionThreshold: 0,
-		triggerThreshold: 200
+		triggerThreshold: 150
 	})
 	.then((controller)=>{
 		

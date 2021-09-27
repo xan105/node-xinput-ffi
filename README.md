@@ -431,6 +431,49 @@ console.log ( await XInput.identify.knownDevices() )
 ]
 ```
 
+```js
+[
+  {
+    manufacturer: 'Sony Corp.',
+    name: 'DualShock 4',
+    vid: '054C',
+    pid: '09CC',
+    xinput: false,
+    interfaces: [ 'USB', 'HID' ],
+    guid: [
+      '{36fc9e60-c465-11cf-8056-444553540000}',
+      '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
+      '{4d36e96c-e325-11ce-bfc1-08002be10318}'
+    ]
+  },
+  {
+    manufacturer: 'Sony Corp.',
+    name: 'DualShock 4 USB Wireless Adaptor',
+    vid: '054C',
+    pid: '0BA0',
+    xinput: false,
+    interfaces: [ 'USB', 'HID' ],
+    guid: [
+      '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
+      '{36fc9e60-c465-11cf-8056-444553540000}',
+      '{4d36e96c-e325-11ce-bfc1-08002be10318}'
+    ]
+  },
+  {
+    manufacturer: 'Microsoft Corp.',
+    name: 'Xbox360 Controller',
+    vid: '045E',
+    pid: '028E',
+    xinput: true,
+    interfaces: [ 'USB', 'HID' ],
+    guid: [
+      '{745a17a0-74d3-11d0-b6fe-00a0c90f57da}',
+      '{d61ca365-5af4-4486-998b-9db4734c6ca3}'
+    ]
+  }
+]
+```
+
 Compatibility
 =============
 
