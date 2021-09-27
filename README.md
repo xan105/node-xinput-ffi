@@ -110,8 +110,7 @@ XInput.isConnected() //Sync
 ### 1️⃣ XInput fn 
 cf: https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
-#### enable
-`(enable: bool): void`
+#### enable `(enable: bool): void`
 
 cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable) (1_4,1_3)<br />
 Enable/Disable all XInput gamepads.
@@ -120,8 +119,7 @@ NB:
  - Stop any rumble currently playing when set to false.
  - setState will throw "ERR_DEVICE_NOT_CONNECTED" when set to false.
  
-#### GetBatteryInformation
-`(gamepadIndex?: number): obj`
+#### GetBatteryInformation `(gamepadIndex?: number): obj`
 
 cf: [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation) (1_4)<br />
 Retrieves the battery type and charge status of the specified controller.
@@ -142,8 +140,7 @@ Output example
 }
 ```
 
-#### GetCapabilities
-`(gamepadIndex?: number): obj`
+#### GetCapabilities `(gamepadIndex?: number): obj`
 
 cf: [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities) (1_4,1_3,9_1_0)<br />
 Retrieves the capabilities and features of the specified controller.
@@ -168,8 +165,7 @@ Output example
 }
 ```
  
-#### getState
-`(gamepadIndex?: number): obj`
+#### getState `(gamepadIndex?: number): obj`
 
 cf: [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate) (1_4,1_3,9_1_0)<br />
 Retrieves the current state of the specified controller.
@@ -201,8 +197,7 @@ You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-get
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
 This is also done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#obj-getbuttonsdownint-gamepadindex)
 
-#### setState
-`(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
+#### setState `(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
 
 cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
@@ -222,8 +217,7 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 ### 2️⃣ Helper fn
 The following are sugar functions based upon previous functions (XInput fn).
 
-#### getButtonsDown
-`(option?: obj): obj`
+#### getButtonsDown `(option?: obj): obj`
 
 getState() wrapper to know more easily which buttons are pressed if any.
 
@@ -337,8 +331,7 @@ function inputLoop(){
 		...
 ```
 			
-#### rumble
-`(option?: obj): void`
+#### rumble `(option?: obj): void`
 
 This function is used to activate the vibration function of a controller.<br />
 
@@ -351,14 +344,12 @@ This function is used to activate the vibration function of a controller.<br />
   - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
   - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
-#### isConnected
-`(gamepadIndex?: number): bool`
+#### isConnected `(gamepadIndex?: number): bool`
 
 whether the specified controller is connected or not.<br />
 Returns true/false
 
-#### listConnected
-`(): bool[]`
+#### listConnected `(): bool[]`
 
 Returns an array of connected status for all controller.<br />
 eg: [true,false,false,false] //Only 1st gamepad is connected
@@ -369,12 +360,11 @@ eg: [true,false,false,false] //Only 1st gamepad is connected
 
 ⚠️ The following are only available as Promise.
 
-Since XINPUT doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.
+Since XINPUT doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.<br />
 It won't tell you which is connected to which XInput slot tho.
 
 
-#### identify
-`(option?: obj): obj[]`
+#### identify `(option?: obj): obj[]`
 
 List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
 
