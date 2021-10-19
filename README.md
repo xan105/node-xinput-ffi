@@ -377,8 +377,8 @@ Return an array of obj where
 - string name : device name
 - string vid : vendor id (unique)
 - string pid : product id (unique)
-- []string interfaces : PNPentity interface(s) found; Available: HID and USB
-- []string guid: classguid(s) found
+- string[] interfaces : PNPentity interface(s) found; Available: HID and USB
+- string[] guid: classguid(s) found
 - bool xinput: If it's a XInput device or not
 
 💡 obj are unique by their vid/pid
