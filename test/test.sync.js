@@ -1,4 +1,4 @@
-import * as XInput from "../lib/esm.js";
+import * as XInput from "../lib/index.js";
 
 const available_gamepad = XInput.listConnected();
 console.log(available_gamepad); //ok

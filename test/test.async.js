@@ -1,4 +1,4 @@
-import * as XInput from "../lib/esm.js";
+import * as XInput from "../lib/index.js";
 
 (async () => {
   const available_gamepad = await XInput.promises.listConnected();

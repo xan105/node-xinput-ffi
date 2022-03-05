@@ -24,7 +24,7 @@ declare interface XINPUT_STATE {
   Gamepad: XINPUT_GAMEPAD
 }
 
-export function enable(enable: bool): void;
+export function enable(enable: boolean): void;
 export function GetBatteryInformation(gamepadIndex?: number): XINPUT_BATTERY_INFORMATION;
 export function GetCapabilities(gamepadIndex?: number): XINPUT_CAPABILITIES;
 export function getState(gamepadIndex?: number): XINPUT_STATE;
@@ -38,7 +38,7 @@ declare interface IOptionsGetButtonsDown {
 }
 
 declare interface IButtonsDownTrigger {
-  active: bool,
+  active: boolean,
   force: number
 }
 
@@ -71,13 +71,13 @@ export function getButtonsDown(option?: IOptionsGetButtonsDown): IButtonsDown;
 declare interface IOptionsRumble {
   force?: number | number[],
   duration?: number,
-  forceEnableGamepad?: bool,
-  forceStateWhileRumble?: bool,
+  forceEnableGamepad?: boolean,
+  forceStateWhileRumble?: boolean,
   gamepadIndex?: number
 }
 
 export function rumble(option?: IOptionsRumble): void;
-export function isConnected(gamepadIndex?: number): bool;
-export function listConnected(): bool[];
+export function isConnected(gamepadIndex?: number): boolean;
+export function listConnected(): boolean[];
 
 export * as promises from "./promises.d.ts";

@@ -1,4 +1,4 @@
-import { promises as XInput } from "../lib/esm.js";
+import { promises as XInput } from "../lib/index.js";
 
 let state = {
 	previous : {

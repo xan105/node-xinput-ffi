@@ -120,7 +120,7 @@ Access XInput functions as documented by Microsoft.<br/>
 Trying to expose them in js as close as possible to the document.<br/>
 📖 https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
-#### `enable(enable: bool): void`
+#### `enable(enable: boolean): void`
 
 Enable/Disable all XInput gamepads.
 
@@ -270,7 +270,7 @@ Returns an object where:
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
 - []string buttons : list of currently pressed [buttons](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
 - trigger.left/right :
-	+ bool active : is the trigger pressed down ? (below triggerThreshold will not set active to true)
+	+ boolean active : is the trigger pressed down ? (below triggerThreshold will not set active to true)
 	+ int force : by how much ? [0,255]
 - thumb.left/right :
 	+ float x: normalized (deadzone) x axis [0.0,1.0]. 0 is centered. Negative values is left. Positive values is right.
@@ -280,8 +280,8 @@ Returns an object where:
 
 <details>
  <summary>Electron example:</summary>
+ 
 ```js
-
 let state = { previous : 0, current : 0 };
 
 function inputLoop(){
@@ -324,9 +324,9 @@ NB: To handle button up (press down then release)<br/>
 ignoring hold button until they are released<br/>
 You should store the previous buttons state and check it against the current.<br/>
 
-Example:		
+Example:
+	
 ```js
-
 let state = {
 	previous : {
 		packetNumber: 0,
@@ -347,6 +347,7 @@ function inputLoop(){
 		
 		...
 ```
+
 </details>
 			
 #### `rumble(option?: obj): void`
@@ -362,12 +363,12 @@ This function is used to activate the vibration function of a controller.<br />
   - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
   - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
-#### `isConnected(gamepadIndex?: number): bool`
+#### `isConnected(gamepadIndex?: number): boolean`
 
 whether the specified controller is connected or not.<br />
 Returns true/false
 
-#### `listConnected(): bool[]`
+#### `listConnected(): boolean[]`
 
 Returns an array of connected status for all controller.<br />
 eg: [true,false,false,false] //Only 1st gamepad is connected
@@ -396,7 +397,7 @@ Return an array of obj where
 - string pid : product id (unique)
 - string[] interfaces : PNPentity interface(s) found; Available: HID and USB
 - string[] guid: classguid(s) found
-- bool xinput: If it's a XInput device or not
+- boolean xinput: If it's a XInput device or not
 
 💡 obj are unique by their vid/pid
 

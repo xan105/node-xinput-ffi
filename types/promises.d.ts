@@ -24,7 +24,7 @@ declare interface XINPUT_STATE {
   Gamepad: XINPUT_GAMEPAD
 }
 
-export function enable(enable: bool): Promise<void>;
+export function enable(enable: boolean): Promise<void>;
 export function GetBatteryInformation(gamepadIndex?: number): Promise<XINPUT_BATTERY_INFORMATION>;
 export function GetCapabilities(gamepadIndex?: number): Promise<XINPUT_CAPABILITIES>;
 export function getState(gamepadIndex?: number): Promise<XINPUT_STATE>;
@@ -38,7 +38,7 @@ declare interface IOptionsGetButtonsDown {
 }
 
 declare interface IButtonsDownTrigger {
-  active: bool,
+  active: boolean,
   force: number
 }
 
@@ -71,17 +71,17 @@ export function getButtonsDown(option?: IOptionsGetButtonsDown): Promise<IButton
 declare interface IOptionsRumble {
   force?: number | number[],
   duration?: number,
-  forceEnableGamepad?: bool,
-  forceStateWhileRumble?: bool,
+  forceEnableGamepad?: boolean,
+  forceStateWhileRumble?: boolean,
   gamepadIndex?: number
 }
 
 export function rumble(option?: IOptionsRumble): Promise<void>;
-export function isConnected(gamepadIndex?: number): Promise<bool>;
-export function listConnected(): Promise<bool[]>;
+export function isConnected(gamepadIndex?: number): Promise<boolean>;
+export function listConnected(): Promise<boolean[]>;
 
 declare interface IOptionsIdentify {
-  XInputOnly?: bool
+  XInputOnly?: boolean
 }
 
 declare interface IIdentify {
@@ -91,7 +91,7 @@ declare interface IIdentify {
   pid: string,
   interfaces: string[],
   guid: string[],
-  xinput: bool 
+  xinput: boolean 
 }
 
 export function identify (option?: IOptionsIdentify): Promise<IIdentify[]>;
