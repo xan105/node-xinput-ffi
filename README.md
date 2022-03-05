@@ -3,6 +3,8 @@ About
 
 XInput wrapper via [node-ffi-napi](https://www.npmjs.com/package/ffi-napi). Access native xinput functions as well as some helpers based around them.
 
+This lib hooks directly to the system dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).
+
 Examples
 ========
 
@@ -115,7 +117,7 @@ XInput.isConnected() //Promise
 ### 1️⃣ XInput fn 
 
 Access XInput functions as documented by Microsoft.<br/>
-Trying to implement them as similar as possible to the document.<br/>
+Trying to expose them in js as close as possible to the document.<br/>
 📖 https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
 #### enable `(enable: bool): void`
