@@ -1,7 +1,7 @@
 {
   "name": "xinput-ffi",
   "version": "2.0.0",
-  "description": "XInput wrapper via ffi-napi",
+  "description": "XInput wrapper via ffi-napi. Access native xinput functions as well as some helpers based around them",
   "type": "module",
   "exports": {
     ".": "./lib/esm.js",

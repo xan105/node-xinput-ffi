@@ -1,12 +1,12 @@
 About
 =====
 
-XInput wrapper via [node-ffi-napi](https://www.npmjs.com/package/ffi-napi).
+XInput wrapper via [node-ffi-napi](https://www.npmjs.com/package/ffi-napi). Access native xinput functions as well as some helpers based around them.
 
-Quick Examples
-==============
+Examples
+========
 
-Vibration
+Vibration (_helper fn_)
 
 ```js
 import { rumble } from "xinput-ffi/promises";
@@ -88,7 +88,9 @@ console.log (await XInput.identify({XInputOnly: true}));
 Installation
 ============
 
-`npm install xinput-ffi`
+```
+npm install xinput-ffi
+```
 
 _Prerequisite: C/C++ build tools and Python 3.x (node-gyp) in order to build [node-ffi-napi](https://www.npmjs.com/package/ffi-napi)._
 
@@ -103,32 +105,38 @@ Previous version(s) are CommonJS (CJS) with an ESM wrapper.
 import * as XInput from 'xinput-ffi';
 XInput.promises.isConnected() //Promise
 XInput.isConnected() //Sync
+
+import * as XInput from "xinput-ffi/promises"
+XInput.isConnected() //Promise
 ```
 
 ## Named export
 
 ### 1️⃣ XInput fn 
-cf: https://docs.microsoft.com/en-us/windows/win32/xinput/functions
+
+Access XInput functions as documented by Microsoft.<br/>
+Trying to implement them as similar as possible to the document.<br/>
+📖 https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
 #### enable `(enable: bool): void`
 
-cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable) (1_4,1_3)<br />
 Enable/Disable all XInput gamepads.
 
 NB:
  - Stop any rumble currently playing when set to false.
  - setState will throw "ERR_DEVICE_NOT_CONNECTED" when set to false.
  
+📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
+ 
 #### GetBatteryInformation `(gamepadIndex?: number): obj`
 
-cf: [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation) (1_4)<br />
 Retrieves the battery type and charge status of the specified controller.
 
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
 gamepadIndex defaults to 0 (1st XInput gamepad)<br />
 If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
 
-Returns an object like a [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_battery_information) structure.
+Returns an object like a 📖 [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_battery_information) structure.
 
 💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
 
@@ -140,16 +148,17 @@ Output example
 }
 ```
 
+📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
+
 #### GetCapabilities `(gamepadIndex?: number): obj`
 
-cf: [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities) (1_4,1_3,9_1_0)<br />
 Retrieves the capabilities and features of the specified controller.
 
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
 gamepadIndex defaults to 0 (1st XInput gamepad)<br />
 If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
-Returns an object like a [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
+Returns an object like a 📖  [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
 But without :
 - XINPUT_GAMEPAD Gamepad
 - XINPUT_VIBRATION Vibration
@@ -164,17 +173,18 @@ Output example
   Flags: 12
 }
 ```
+
+📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
  
 #### getState `(gamepadIndex?: number): obj`
 
-cf: [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate) (1_4,1_3,9_1_0)<br />
 Retrieves the current state of the specified controller.
 
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
 gamepadIndex defaults to 0 (1st XInput gamepad)<br />
 If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
-Returns an object like a [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
+Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
 Output example
 ```js
@@ -191,15 +201,16 @@ Output example
     }
 ```
 
-💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
+💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all 📖 [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
 You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj) for this (see below in helper fn ...)
 
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
 This is also done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj)
 
+📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
+
 #### setState `(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
 
-cf: [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate) (1_4,9_1_0)<br />
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
@@ -212,10 +223,13 @@ NB:
 
 Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-obj-void) (see below in Helper fn...)
 
+📖 [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate)
+
 <hr>
 
 ### 2️⃣ Helper fn
-The following are sugar functions based upon previous functions (XInput fn).
+
+The following are sugar/helper functions based upon the previous XInput functions.
 
 #### getButtonsDown `(option?: obj): obj`
 
@@ -358,13 +372,12 @@ eg: [true,false,false,false] //Only 1st gamepad is connected
 
 ### 3️⃣ Identify device (VID,PID,GUID,Name, ...)
 
-⚠️ The following are only available as Promise.
-
 Since XINPUT doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.<br />
 It won't tell you which is connected to which XInput slot tho.
 
+#### identify `(option?: obj): Promise<obj[]>`
 
-#### identify `(option?: obj): obj[]`
+⚠️ Promise only.
 
 List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
 
