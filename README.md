@@ -120,7 +120,7 @@ Access XInput functions as documented by Microsoft.<br/>
 Trying to expose them in js as close as possible to the document.<br/>
 📖 https://docs.microsoft.com/en-us/windows/win32/xinput/functions
 
-#### enable `(enable: bool): void`
+#### `enable(enable: bool): void`
 
 Enable/Disable all XInput gamepads.
 
@@ -130,7 +130,7 @@ NB:
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
-#### GetBatteryInformation `(gamepadIndex?: number): obj`
+#### `GetBatteryInformation(gamepadIndex?: number): obj`
 
 Retrieves the battery type and charge status of the specified controller.
 
@@ -152,7 +152,7 @@ Output example
 
 📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
 
-#### GetCapabilities `(gamepadIndex?: number): obj`
+#### `GetCapabilities(gamepadIndex?: number): obj`
 
 Retrieves the capabilities and features of the specified controller.
 
@@ -178,7 +178,7 @@ Output example
 
 📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
  
-#### getState `(gamepadIndex?: number): obj`
+#### `getState(gamepadIndex?: number): obj`
 
 Retrieves the current state of the specified controller.
 
@@ -211,7 +211,7 @@ This is also done for you in [getButtonsDown()](https://github.com/xan105/node-x
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 
-#### setState `(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
+#### `setState(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
 
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
@@ -233,7 +233,7 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 The following are sugar/helper functions based upon the previous XInput functions.
 
-#### getButtonsDown `(option?: obj): obj`
+#### `getButtonsDown(option?: obj): obj`
 
 getState() wrapper to know more easily which buttons are pressed if any.
 
@@ -278,7 +278,8 @@ Returns an object where:
 	+ float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
 	+ []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
 
-📖 Electron example:
+<details>
+ <summary>Electron example:</summary>
 ```js
 
 let state = { previous : 0, current : 0 };
@@ -346,8 +347,9 @@ function inputLoop(){
 		
 		...
 ```
+</details>
 			
-#### rumble `(option?: obj): void`
+#### `rumble(option?: obj): void`
 
 This function is used to activate the vibration function of a controller.<br />
 
@@ -360,12 +362,12 @@ This function is used to activate the vibration function of a controller.<br />
   - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
   - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
-#### isConnected `(gamepadIndex?: number): bool`
+#### `isConnected(gamepadIndex?: number): bool`
 
 whether the specified controller is connected or not.<br />
 Returns true/false
 
-#### listConnected `(): bool[]`
+#### `listConnected(): bool[]`
 
 Returns an array of connected status for all controller.<br />
 eg: [true,false,false,false] //Only 1st gamepad is connected
@@ -374,10 +376,10 @@ eg: [true,false,false,false] //Only 1st gamepad is connected
 
 ### 3️⃣ Identify device (VID,PID,GUID,Name, ...)
 
-Since XINPUT doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.<br />
+Since XInput doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.<br />
 It won't tell you which is connected to which XInput slot tho.
 
-#### identify `(option?: obj): Promise<obj[]>`
+#### `identify(option?: obj): Promise<obj[]>`
 
 ⚠️ Promise only.
 
