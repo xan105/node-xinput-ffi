@@ -34,7 +34,8 @@ console.log(state);
 /* Output:
   {
     dwPacketNumber: 322850,
-    Gamepad: { wButtons: 0,
+    Gamepad: { 
+      wButtons: ['XINPUT_GAMEPAD_B'],
       bLeftTrigger: 0,
       bRightTrigger: 0,
       sThumbLX: 128,
@@ -161,9 +162,6 @@ gamepadIndex defaults to 0 (1st XInput gamepad)<br />
 If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a 📖  [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
-But without :
-- XINPUT_GAMEPAD Gamepad
-- XINPUT_VIBRATION Vibration
 
 💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
 
@@ -172,7 +170,32 @@ Output example
 {
   Type: 'XINPUT_DEVTYPE_GAMEPAD',
   SubType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
-  Flags: 12
+  Flags: [ 'XINPUT_CAPS_VOICE_SUPPORTED', 'XINPUT_CAPS_PMD_SUPPORTED' ],
+  Gamepad: {
+    wButtons: [
+      'XINPUT_GAMEPAD_DPAD_UP',
+      'XINPUT_GAMEPAD_DPAD_DOWN',
+      'XINPUT_GAMEPAD_DPAD_LEFT',
+      'XINPUT_GAMEPAD_DPAD_RIGHT',
+      'XINPUT_GAMEPAD_START',
+      'XINPUT_GAMEPAD_BACK',
+      'XINPUT_GAMEPAD_LEFT_THUMB',
+      'XINPUT_GAMEPAD_RIGHT_THUMB',
+      'XINPUT_GAMEPAD_LEFT_SHOULDER',
+      'XINPUT_GAMEPAD_RIGHT_SHOULDER',
+      'XINPUT_GAMEPAD_A',
+      'XINPUT_GAMEPAD_B',
+      'XINPUT_GAMEPAD_X',
+      'XINPUT_GAMEPAD_Y'
+    ],
+    bLeftTrigger: 192,
+    bRightTrigger: 255,
+    sThumbLX: -64,
+    sThumbLY: -64,
+    sThumbRX: -64,
+    sThumbRY: 255
+  },
+  Vibration: { wLeftMotorSpeed: 0, wRightMotorSpeed: 0 }
 }
 ```
 
@@ -192,7 +215,8 @@ Output example
 ```js
     {
       dwPacketNumber: 322850,
-      Gamepad: { wButtons: 0,
+      Gamepad: { 
+        wButtons: ['XINPUT_GAMEPAD_X'],
         bLeftTrigger: 0,
         bRightTrigger: 0,
         sThumbLX: 128,
@@ -203,11 +227,8 @@ Output example
     }
 ```
 
-💡 To know which button**s** are currently pressed down you need to _bitwise AND (&)_ wButtons with all 📖 [XINPUT BUTTONS](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
-You can use [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj) for this (see below in helper fn ...)
-
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
-This is also done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj)
+This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj)
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 
@@ -235,11 +256,10 @@ The following are sugar/helper functions based upon the previous XInput function
 
 #### `getButtonsDown(option?: obj): obj`
 
-getState() wrapper to know more easily which buttons are pressed if any.
-
-Also returns the rest of getState() information normalized for convenience such as<br/> 
+Normalize getState() information for convenience:<br/> 
 ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
-Trigger state and force (taking threshold into account).<br/> 
+Trigger state and force (taking threshold into account).<br/>
+Which buttons are pressed if any.<br/>
 
 ⚙️ options:
 
