@@ -3,14 +3,8 @@ declare interface XINPUT_BATTERY_INFORMATION {
   BatteryLevel: number | string
 }
 
-declare interface XINPUT_CAPABILITIES {
-  Type: number | string,
-  SubType: number | string,
-  Flags: number | string
-}
-
 declare interface XINPUT_GAMEPAD {
-  wButtons: number,
+  wButtons: number | string[],
   bLeftTrigger: number,
   bRightTrigger: number,
   sThumbLX: number,
@@ -19,15 +13,61 @@ declare interface XINPUT_GAMEPAD {
   sThumbRY: number
 }
 
+declare interface XINPUT_VIBRATION {
+  wLeftMotorSpeed: number,
+  wRightMotorSpeed: number
+}
+
+declare interface XINPUT_CAPABILITIES {
+  Type: number | string,
+  SubType: number | string,
+  Flags: number | string[],
+  Gamepad: XINPUT_GAMEPAD,
+  Vibration: XINPUT_VIBRATION
+}
+
+declare interface XINPUT_CAPABILITIES_EX {
+  Type: number | string,
+  SubType: number | string,
+  Flags: number | string,
+  Gamepad: XINPUT_GAMEPAD,
+  Vibration: XINPUT_VIBRATION,
+  VendorId: string,
+  ProductId: string,
+  VersionNumber: string,
+  unk1: number
+}
+
 declare interface XINPUT_STATE {
   dwPacketNumber: number,
   Gamepad: XINPUT_GAMEPAD
 }
 
 export function enable(enable: boolean): Promise<void>;
-export function GetBatteryInformation(gamepadIndex?: number): Promise<XINPUT_BATTERY_INFORMATION>;
-export function GetCapabilities(gamepadIndex?: number): Promise<XINPUT_CAPABILITIES>;
-export function getState(gamepadIndex?: number): Promise<XINPUT_STATE>;
+
+declare interface IOptionGetBatteryInformation {
+  gamepadIndex?: number,
+  devType?: number,
+  translate?: boolean
+}
+
+export function GetBatteryInformation(option?: number | IOptionGetBatteryInformation): Promise<XINPUT_BATTERY_INFORMATION>;
+
+declare interface IOptionGetCapabilities {
+  gamepadIndex?: number,
+  flags?: number,
+  translate?: boolean
+}
+
+export function GetCapabilities(option?: number | IOption): Promise<XINPUT_CAPABILITIES>;
+
+declare interface IOption {
+  gamepadIndex?: number,
+  translate?: boolean
+}
+
+export function GetCapabilitiesEx(option?: number | IOption): Promise<XINPUT_CAPABILITIES_EX>;
+export function getState(option?: number | IOption): Promise<XINPUT_STATE>;
 export function setState(lowFrequency: number, highFrequency: number, gamepadIndex?: number): Promise<void>;
 
 declare interface IOptionsGetButtonsDown {

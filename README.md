@@ -45,6 +45,24 @@ console.log(state);
     }
   }
 */
+
+//If you prefer the raw data instead
+const state = await XInput.getState({translate: false});
+console.log(state);
+/* Output:
+{
+  dwPacketNumber: 18165,
+  Gamepad: {
+    wButtons: 4096,
+    bLeftTrigger: 0,
+    bRightTrigger: 0,
+    sThumbLX: 257,
+    sThumbLY: 767,
+    sThumbRX: 773,
+    sThumbRY: 1279
+  }
+}
+*/
   
 //Set 1st XInput gamepad state to 50% left/right; 
 //Wait 2sec; Reset state to idle
@@ -127,46 +145,93 @@ Enable/Disable all XInput gamepads.
 
 NB:
  - Stop any rumble currently playing when set to false.
- - setState will throw "ERR_DEVICE_NOT_CONNECTED" when set to false.
+ - setState will throw "ERR_DEVICE_NOT_CONNECTED" when this is set to false.
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
-#### `GetBatteryInformation(gamepadIndex?: number): obj`
+#### `GetBatteryInformation(option?: number | obj): obj`
 
 Retrieves the battery type and charge status of the specified controller.
 
-gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
-gamepadIndex defaults to 0 (1st XInput gamepad)<br />
+⚙️ options:
+
+- gamepadIndex?: number 
+
+Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+
+- devType?: number 
+
+Specifies which device associated with this controller should be queried.<br/>
+Must be 0: GAMEPAD (_default_) or 1: HEADSET
+
+- translate?: boolean
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
+If you want the raw data output set it to false.
+
+If `option` is a number it will be used as gamepadIndex.<br/>
 If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a 📖 [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_battery_information) structure.
 
-💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
-
-Output example
+Example
 ```js
+GetBatteryInformation();
+GetBatteryInformation(0);
+GetBatteryInformation({gamepadIndex: 0});
+//output
 {
   BatteryType: 'BATTERY_TYPE_WIRED',
   BatteryLevel: 'BATTERY_LEVEL_FULL'
 }
 ```
 
+If you want raw data output
+```js
+GetBatteryInformation({translate: false});
+//output
+{
+  BatteryType: 1,
+  BatteryLevel: 3
+}
+```
+
 📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
 
-#### `GetCapabilities(gamepadIndex?: number): obj`
+#### `GetCapabilities(option?: number | obj): obj`
 
 Retrieves the capabilities and features of the specified controller.
 
-gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
-gamepadIndex defaults to 0 (1st XInput gamepad)<br />
-If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
+⚙️ options:
+
+- gamepadIndex?: number 
+
+Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+
+- flags?: number 
+
+Input flags that identify the controller type. <br/>
+If this value is 0, then the capabilities of all controllers connected to the system are returned.<br/>
+Currently, only 1: XINPUT_FLAG_GAMEPAD (_default_) is supported.
+
+- translate?: boolean
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
+If you want the raw data output set it to false.
+
+If `option` is a number it will be used as gamepadIndex.<br/>
+If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a 📖  [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
 
 💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
 
-Output example
+Example
 ```js
+GetCapabilities();
+GetCapabilities(0);
+GetCapabilities({gamepadIndex: 0});
+//Output
 {
   Type: 'XINPUT_DEVTYPE_GAMEPAD',
   SubType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
@@ -199,32 +264,84 @@ Output example
 }
 ```
 
+If you want raw data output
+```js
+GetCapabilities({translate: false});
+//output
+{
+  Type: 1,
+  SubType: 1,
+  Flags: 12,
+  Gamepad: {
+    wButtons: 65535,
+    bLeftTrigger: 192,
+    bRightTrigger: 255,
+    sThumbLX: -64,
+    sThumbLY: -64,
+    sThumbRX: -64,
+    sThumbRY: 255
+  },
+  Vibration: { wLeftMotorSpeed: 0, wRightMotorSpeed: 0 }
+}
+```
+
 📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
  
-#### `getState(gamepadIndex?: number): obj`
+#### `getState(option?: number | obj): obj`
 
 Retrieves the current state of the specified controller.
 
-gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
-gamepadIndex defaults to 0 (1st XInput gamepad)<br />
+⚙️ options:
+
+- gamepadIndex?: number 
+
+Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+
+- translate?: boolean
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
+If you want the raw data output set it to false.
+
+If `option` is a number it will be used as gamepadIndex.<br/>
 If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
 
 Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
-Output example
+Example
 ```js
-    {
-      dwPacketNumber: 322850,
-      Gamepad: { 
-        wButtons: ['XINPUT_GAMEPAD_X'],
-        bLeftTrigger: 0,
-        bRightTrigger: 0,
-        sThumbLX: 128,
-        sThumbLY: 641,
-        sThumbRX: -1156,
-        sThumbRY: -129
-      }
-    }
+getState();
+getState(0);
+//Output
+{
+  dwPacketNumber: 322850,
+  Gamepad: { 
+    wButtons: ['XINPUT_GAMEPAD_A'],
+    bLeftTrigger: 0,
+    bRightTrigger: 0,
+    sThumbLX: 128,
+    sThumbLY: 641,
+    sThumbRX: -1156,
+    sThumbRY: -129
+  }
+}
+```
+
+If you want raw data output
+```js
+getState({translate: false});
+//output
+{
+  dwPacketNumber: 18165,
+  Gamepad: {
+    wButtons: 4096,
+    bLeftTrigger: 0,
+    bRightTrigger: 0,
+    sThumbLX: 257,
+    sThumbLY: 767,
+    sThumbRX: 773,
+    sThumbRY: 1279
+  }
+}
 ```
 
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
@@ -239,6 +356,10 @@ Sends data to a connected controller. This function is used to activate the vibr
 gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
 gamepadIndex defaults to 0 (1st XInput gamepad)<br />
 If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
+
+💡 `XInputSetState` valid values are in the range 0 to 65535.<br />
+Zero signifies no motor use; 65535 signifies 100 percent motor use.<br />
+`lowFrequency` and `highFrequency` are in % (0-100) for convenience.
 
 NB:
 - You need to keep the event-loop alive otherwise the vibration will terminate with your program.<br />
@@ -375,13 +496,13 @@ function inputLoop(){
 This function is used to activate the vibration function of a controller.<br />
 
 ⚙️ options:
-  - force : Rumble force to apply to the motors. 
+  - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+  - force : Rumble force in % (0-100) to apply to the motors. 
             Either an integer (both motor with the same value) or an array of 2 integer: [left,right]
             _defaults to [50,25]_
   - duration: Rumble duration in ms. Max: 2500 ms. _defaults to max_
   - forceEnableGamepad: Use **enable()** to force the activation of XInput gamepad before rumble. _defaults to false_
   - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
-  - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
   
 #### `isConnected(gamepadIndex?: number): boolean`
 

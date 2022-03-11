@@ -1,7 +1,6 @@
 import * as XInput from "../lib/index.js";
 
-const available_gamepad = XInput.listConnected();
-console.log(available_gamepad); //ok
+console.log(XInput.listConnected()); //ok
 console.log(XInput.GetBatteryInformation());
 console.log(XInput.GetCapabilities());
 
@@ -39,9 +38,8 @@ console.log(1);XInput.rumble();console.log(2);XInput.rumble();console.log("end")
 */
 
 /*
-//const state = XInput.getState(); //ok
-//const state = XInput.getState(0); //ok
-//console.log(state);
+//console.log(XInput.getState()); //ok
+//console.log(XInput.getState(0)); //ok
 //XInput.getState(1000); //err->ok
 //XInput.getState("string"); //err->ok
 //XInput.getState(null); //err->ok
