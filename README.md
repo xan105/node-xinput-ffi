@@ -149,7 +149,7 @@ NB:
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
-#### `GetBatteryInformation(option?: number | obj): obj`
+#### `getBatteryInformation(option?: number | obj): obj`
 
 Retrieves the battery type and charge status of the specified controller.
 
@@ -176,9 +176,9 @@ Returns an object like a 📖 [XINPUT_BATTERY_INFORMATION](https://docs.microsof
 
 Example
 ```js
-GetBatteryInformation();
-GetBatteryInformation(0);
-GetBatteryInformation({gamepadIndex: 0});
+getBatteryInformation();
+getBatteryInformation(0);
+getBatteryInformation({gamepadIndex: 0});
 //output
 {
   BatteryType: 'BATTERY_TYPE_WIRED',
@@ -188,7 +188,7 @@ GetBatteryInformation({gamepadIndex: 0});
 
 If you want raw data output
 ```js
-GetBatteryInformation({translate: false});
+getBatteryInformation({translate: false});
 //output
 {
   BatteryType: 1,
@@ -198,7 +198,7 @@ GetBatteryInformation({translate: false});
 
 📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
 
-#### `GetCapabilities(option?: number | obj): obj`
+#### `getCapabilities(option?: number | obj): obj`
 
 Retrieves the capabilities and features of the specified controller.
 
@@ -228,9 +228,9 @@ Returns an object like a 📖  [XINPUT_CAPABILITIES](https://docs.microsoft.com/
 
 Example
 ```js
-GetCapabilities();
-GetCapabilities(0);
-GetCapabilities({gamepadIndex: 0});
+getCapabilities();
+getCapabilities(0);
+getCapabilities({gamepadIndex: 0});
 //Output
 {
   Type: 'XINPUT_DEVTYPE_GAMEPAD',
@@ -266,7 +266,7 @@ GetCapabilities({gamepadIndex: 0});
 
 If you want raw data output
 ```js
-GetCapabilities({translate: false});
+getCapabilities({translate: false});
 //output
 {
   Type: 1,

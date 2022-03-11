@@ -1,8 +1,8 @@
 import * as XInput from "../lib/index.js";
 
 console.log(XInput.listConnected()); //ok
-console.log(XInput.GetBatteryInformation());
-console.log(XInput.GetCapabilities());
+console.log(XInput.getBatteryInformation());
+console.log(XInput.getCapabilities());
 
 /*
 //const isConnected = XInput.isConnected(0); //ok

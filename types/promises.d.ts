@@ -51,7 +51,7 @@ declare interface IOptionGetBatteryInformation {
   translate?: boolean
 }
 
-export function GetBatteryInformation(option?: number | IOptionGetBatteryInformation): Promise<XINPUT_BATTERY_INFORMATION>;
+export function getBatteryInformation(option?: number | IOptionGetBatteryInformation): Promise<XINPUT_BATTERY_INFORMATION>;
 
 declare interface IOptionGetCapabilities {
   gamepadIndex?: number,
@@ -59,14 +59,14 @@ declare interface IOptionGetCapabilities {
   translate?: boolean
 }
 
-export function GetCapabilities(option?: number | IOption): Promise<XINPUT_CAPABILITIES>;
+export function getCapabilities(option?: number | IOption): Promise<XINPUT_CAPABILITIES>;
 
 declare interface IOption {
   gamepadIndex?: number,
   translate?: boolean
 }
 
-export function GetCapabilitiesEx(option?: number | IOption): Promise<XINPUT_CAPABILITIES_EX>;
+export function getCapabilitiesEx(option?: number | IOption): Promise<XINPUT_CAPABILITIES_EX>;
 export function getState(option?: number | IOption): Promise<XINPUT_STATE>;
 export function setState(lowFrequency: number, highFrequency: number, gamepadIndex?: number): Promise<void>;
 
