@@ -42,7 +42,8 @@
   },
   "homepage": "https://github.com/xan105/node-xinput-ffi#readme",
   "dependencies": {
-    "@xan105/error": "^1.1.1",
+    "@xan105/error": "^1.2.0",
+    "@xan105/is": "^2.4.0",
     "ffi-napi": "^4.0.3",
     "ref-napi": "^3.0.2",
     "ref-struct-di": "^1.1.1"
