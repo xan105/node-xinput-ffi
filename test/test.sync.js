@@ -3,6 +3,7 @@ import * as XInput from "../lib/index.js";
 console.log(XInput.listConnected()); //ok
 console.log(XInput.getBatteryInformation());
 console.log(XInput.getCapabilities());
+console.log(XInput.getState({translate: false}));
 
 /*
 //const isConnected = XInput.isConnected(0); //ok

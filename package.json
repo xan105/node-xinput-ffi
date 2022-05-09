@@ -15,7 +15,7 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "lint": "npx eslint --ignore-path .gitignore ./**/*.{js,mjs}"
+    "lint": "npx eslint --ignore-path .gitignore \"./**/*.{js,mjs}\""
   },
   "keywords": [
     "xinput",
