@@ -15,7 +15,9 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "lint": "npx eslint --ignore-path .gitignore \"./**/*.{js,mjs}\""
+    "lint": "npx eslint --ignore-path .gitignore \"./**/*.{js,mjs}\"",
+    "postinstall": "patch-package && npm run-script rebuild",
+    "rebuild": "cd .\\node_modules\\ffi-napi && node-gyp rebuild"
   },
   "keywords": [
     "xinput",
@@ -45,10 +47,11 @@
     "@xan105/error": "^1.2.0",
     "@xan105/is": "^2.4.0",
     "ffi-napi": "^4.0.3",
-    "ref-napi": "^3.0.2",
+    "ref-napi": "^3.0.3",
     "ref-struct-di": "^1.1.1"
   },
   "devDependencies": {
-    "eslint": "^8.10.0"
+    "eslint": "^8.10.0",
+    "patch-package": "^6.4.7"
   }
 }
