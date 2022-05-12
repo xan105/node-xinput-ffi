@@ -1,9 +1,10 @@
 About
 =====
 
-XInput wrapper via [node-ffi-napi](https://www.npmjs.com/package/ffi-napi). Access native xinput functions as well as some helpers based around them.
+XInput <abbr title="Foreign Function Interface">FFI</abbr> wrapper: access native XInput functions as well as some helpers based around them.
 
-This lib hooks directly to the system dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).
+This lib hooks directly to the system's dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).
+"Hidden" XInput functions such as `XInputGetCapabilitiesEx()` are exposed.
 
 Examples
 ========
