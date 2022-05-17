@@ -3,8 +3,9 @@ About
 
 XInput <abbr title="Foreign Function Interface">FFI</abbr> wrapper: access native XInput functions as well as some helpers based around them.
 
-This lib hooks directly to the system's dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).
-"Hidden" XInput functions such as `XInputGetCapabilitiesEx()` are exposed.
+This lib hooks directly to the system's dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).<br/>
+It aims to implement and expose XInput functions as close as possible to the document.<br/>
+"Hidden" XInput functions such as `XInputGetCapabilitiesEx()` are exposed as well.<br/>
 
 Examples
 ========
@@ -25,57 +26,94 @@ await rumble({force: 100});
 await rumble({force: [50,25]});
 ```
 
-Direct use of XInput functions
+Direct use of XInput function
 
 ```js
 import { promises as XInput } from "xinput-ffi";
 
-const state = await XInput.getState();
-console.log(state);
-/* Output:
-  {
-    dwPacketNumber: 322850,
-    Gamepad: { 
-      wButtons: ['XINPUT_GAMEPAD_B'],
-      bLeftTrigger: 0,
-      bRightTrigger: 0,
-      sThumbLX: 128,
-      sThumbLY: 641,
-      sThumbRX: -1156,
-      sThumbRY: -129
-    }
-  }
-*/
-
-//If you prefer the raw data instead
-const state = await XInput.getState({translate: false});
-console.log(state);
+const capabilities = await XInput.getCapabilities();
+console.log(capabilities);
 /* Output:
 {
-  dwPacketNumber: 18165,
-  Gamepad: {
-    wButtons: 4096,
+  type: 'XINPUT_DEVTYPE_GAMEPAD',
+  subType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
+  flags: [ 'XINPUT_CAPS_VOICE_SUPPORTED', 'XINPUT_CAPS_PMD_SUPPORTED' ],
+  gamepad: {
+    wButtons: [
+      'XINPUT_GAMEPAD_DPAD_UP',
+      'XINPUT_GAMEPAD_DPAD_DOWN',
+      'XINPUT_GAMEPAD_DPAD_LEFT',
+      'XINPUT_GAMEPAD_DPAD_RIGHT',
+      'XINPUT_GAMEPAD_START',
+      'XINPUT_GAMEPAD_BACK',
+      'XINPUT_GAMEPAD_LEFT_THUMB',
+      'XINPUT_GAMEPAD_RIGHT_THUMB',
+      'XINPUT_GAMEPAD_LEFT_SHOULDER',
+      'XINPUT_GAMEPAD_RIGHT_SHOULDER',
+      'XINPUT_GAMEPAD_A',
+      'XINPUT_GAMEPAD_B',
+      'XINPUT_GAMEPAD_X',
+      'XINPUT_GAMEPAD_Y'
+    ],
+    bLeftTrigger: 255,
+    bRightTrigger: 255,
+    sThumbLX: -64,
+    sThumbLY: -64,
+    sThumbRX: -64,
+    sThumbRY: -64
+  },
+  vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
+}
+*/
+```
+
+If you prefer the raw data instead:
+
+```js
+import { promises as XInput } from "xinput-ffi";
+
+const capabilities = await XInput.getCapabilities({translate: false});
+console.log(capabilities);
+/* Output:
+{
+  type: 1,
+  subType: 1,
+  flags: 12,
+  gamepad: {
+    wButtons: 62463,
+    bLeftTrigger: 255,
+    bRightTrigger: 255,
+    sThumbLX: -64,
+    sThumbLY: -64,
+    sThumbRX: -64,
+    sThumbRY: -64
+  },
+  vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
+}
+*/
+```
+
+"Hidden" XInput function
+
+```js
+import { promises as XInput } from "xinput-ffi";
+
+const state = await XInput.getStateEx();
+console.log(state);
+/*Output:
+{
+  dwPacketNumber: 6510,
+  gamepad: {
+    wButtons: [ 'XINPUT_GAMEPAD_GUIDE' ],
     bLeftTrigger: 0,
     bRightTrigger: 0,
-    sThumbLX: 257,
+    sThumbLX: -1024,
     sThumbLY: 767,
-    sThumbRX: 773,
-    sThumbRY: 1279
+    sThumbRX: 257,
+    sThumbRY: 767
   }
 }
 */
-  
-//Set 1st XInput gamepad state to 50% left/right; 
-//Wait 2sec; Reset state to idle
-await XInput.setState(50,50);
-await new Promise(resolve => setTimeout(resolve, 2000)).catch(()=>{});
-await XInput.setState(0,0);
-  
-//Set 1st XInput gamepad state to 50% left/right; 
-//Wait 500ms and disable all XInput gamepads
-await XInput.setState(50,50);
-await new Promise(resolve => setTimeout(resolve, 500)).catch(()=>{});
-await XInput.enable(false);
 ```
 
 Misc
@@ -111,10 +149,11 @@ Installation
 ============
 
 ```
-npm install xinput-ffi
+npm install koffi
 ```
 
-_Prerequisite: C/C++ build tools and Python 3.x (node-gyp) in order to build [node-ffi-napi](https://www.npmjs.com/package/ffi-napi)._
+_Prerequisite: C/C++ build tools and [CMake meta build system](https://cmake.org/) in order to build [koffi](https://www.npmjs.com/package/koffi)._<br/>
+_💡 [koffi](https://www.npmjs.com/package/koffi) provides prebuilt binaries so in most cases the above mentioned prerequisites aren't needed._
 
 API
 ===
@@ -134,15 +173,36 @@ XInput.isConnected() //Promise
 
 ## Named export
 
-### 1️⃣ XInput fn 
+### 1️⃣  XInput fn 
 
 Access XInput functions as documented by Microsoft.<br/>
-Trying to expose them in js as close as possible to the document.<br/>
-📖 https://docs.microsoft.com/en-us/windows/win32/xinput/functions
+📖 [Microsoft documentation](https://docs.microsoft.com/en-us/windows/win32/xinput/functions)
+
+- ✔️ [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
+- ❌ [XInputGetAudioDeviceIds]() _> deprecated: doesn't work on modern Windows system._
+- ✔️ [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
+- ✔️ [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities) 
+- ❌ [XInputGetDSoundAudioDeviceGuids]() _> deprecated: doesn't work on modern Windows system._
+- ✔️ [XInputGetKeystroke](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetkeystroke)
+- ✔️ [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
+- ✔️ [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate)
+
+"Hidden" and undocumented functions<br/>
+📖 [Reverse Engineer's log](https://reverseengineerlog.blogspot.com/2016/06/xinputs-hidden-functions.html)
+
+- ✔️ XInputGetStateEx
+- ⚠️ XInputWaitForGuideButton _> calling triggers ERROR_BAD_ARGUMENTS (to-do: fixme)._
+- ✔️ XInputCancelGuideButtonWait
+- ✔️ XInputPowerOffController
+- ⚠️ XInputGetBaseBusInformation _> Not working with all gamepad._
+- ✔️ XInputGetCapabilitiesEx;
+
+NB: Depending on which XInput dll version you are using _(1_4, 1_3, 9_1_0)_ some functions won't be available.
 
 #### `enable(enable: boolean): void`
 
-Enable/Disable all XInput gamepads.
+Enable/Disable all XInput gamepads.<br/>
+This function is meant to be called when an application gains or loses focus.
 
 NB:
  - Stop any rumble currently playing when set to false.
@@ -150,28 +210,27 @@ NB:
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
-#### `getBatteryInformation(option?: number | obj): obj`
+#### `getBatteryInformation(option?: number | object): object`
 
-Retrieves the battery type and charge status of the specified controller.
+Retrieves the battery type and charge status of a wireless controller.
 
 ⚙️ options:
 
-- gamepadIndex?: number 
+- dwUserIndex?: number (0)
 
-Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+Index of the user's controller. Can be a value from 0 to 3.
 
-- devType?: number 
+- devType?: number (0)
 
 Specifies which device associated with this controller should be queried.<br/>
-Must be 0: GAMEPAD (_default_) or 1: HEADSET
+0: GAMEPAD or 1: HEADSET
 
-- translate?: boolean
+- translate?: boolean (true)
 
-When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
-If you want the raw data output set it to false.
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
 
-If `option` is a number it will be used as gamepadIndex.<br/>
-If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
 Returns an object like a 📖 [XINPUT_BATTERY_INFORMATION](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_battery_information) structure.
 
@@ -179,11 +238,11 @@ Example
 ```js
 getBatteryInformation();
 getBatteryInformation(0);
-getBatteryInformation({gamepadIndex: 0});
+getBatteryInformation({dwUserIndex: 0});
 //output
 {
-  BatteryType: 'BATTERY_TYPE_WIRED',
-  BatteryLevel: 'BATTERY_LEVEL_FULL'
+  batteryType: 'BATTERY_TYPE_WIRED',
+  batteryLevel: 'BATTERY_LEVEL_FULL'
 }
 ```
 
@@ -192,40 +251,37 @@ If you want raw data output
 getBatteryInformation({translate: false});
 //output
 {
-  BatteryType: 1,
-  BatteryLevel: 3
+  batteryType: 1,
+  batteryLevel: 3
 }
 ```
 
 📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
 
-#### `getCapabilities(option?: number | obj): obj`
+#### `getCapabilities(option?: number | object): object`
 
 Retrieves the capabilities and features of the specified controller.
 
 ⚙️ options:
 
-- gamepadIndex?: number 
+- dwUserIndex?: number (0)
 
-Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+Index of the user's controller. Can be a value from 0 to 3.
 
-- flags?: number 
+- dwFlags?: number (1)
 
 Input flags that identify the controller type. <br/>
 If this value is 0, then the capabilities of all controllers connected to the system are returned.<br/>
-Currently, only 1: XINPUT_FLAG_GAMEPAD (_default_) is supported.
+Currently, only 1: XINPUT_FLAG_GAMEPAD is supported.
 
-- translate?: boolean
+- translate?: boolean (true)
 
-When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
-If you want the raw data output set it to false.
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
 
-If `option` is a number it will be used as gamepadIndex.<br/>
-If gamepad is not connected throw "ERR_DEVICE_NOT_CONNECTED".
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
-Returns an object like a 📖  [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
-
-💡 When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.
+Returns an object like a 📖 [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.
 
 Example
 ```js
@@ -234,10 +290,10 @@ getCapabilities(0);
 getCapabilities({gamepadIndex: 0});
 //Output
 {
-  Type: 'XINPUT_DEVTYPE_GAMEPAD',
-  SubType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
-  Flags: [ 'XINPUT_CAPS_VOICE_SUPPORTED', 'XINPUT_CAPS_PMD_SUPPORTED' ],
-  Gamepad: {
+  type: 'XINPUT_DEVTYPE_GAMEPAD',
+  subType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
+  flags: [ 'XINPUT_CAPS_VOICE_SUPPORTED', 'XINPUT_CAPS_PMD_SUPPORTED' ],
+  gamepad: {
     wButtons: [
       'XINPUT_GAMEPAD_DPAD_UP',
       'XINPUT_GAMEPAD_DPAD_DOWN',
@@ -254,14 +310,14 @@ getCapabilities({gamepadIndex: 0});
       'XINPUT_GAMEPAD_X',
       'XINPUT_GAMEPAD_Y'
     ],
-    bLeftTrigger: 192,
+    bLeftTrigger: 255,
     bRightTrigger: 255,
     sThumbLX: -64,
     sThumbLY: -64,
     sThumbRX: -64,
-    sThumbRY: 255
+    sThumbRY: -64
   },
-  Vibration: { wLeftMotorSpeed: 0, wRightMotorSpeed: 0 }
+  vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
 }
 ```
 
@@ -270,24 +326,75 @@ If you want raw data output
 getCapabilities({translate: false});
 //output
 {
-  Type: 1,
-  SubType: 1,
-  Flags: 12,
-  Gamepad: {
+  type: 1,
+  subType: 1,
+  flags: 12,
+  gamepad: {
     wButtons: 65535,
-    bLeftTrigger: 192,
+    bLeftTrigger: 255,
     bRightTrigger: 255,
     sThumbLX: -64,
     sThumbLY: -64,
     sThumbRX: -64,
-    sThumbRY: 255
+    sThumbRY: -64
   },
-  Vibration: { wLeftMotorSpeed: 0, wRightMotorSpeed: 0 }
+  vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
 }
 ```
 
 📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
- 
+
+### `getKeystroke(option?: number | object): object`
+
+Retrieves a gamepad input event.<br/>
+To be honest, this isn't really useful since the chatpad feature wasn't implemented on Windows.<br/>
+NB: If no new keys have been pressed, this will throw with ERROR_EMPTY.
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+- translate?: boolean (true)
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+Returns an object like a 📖 [XINPUT_KEYSTROKE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_keystroke) structure.
+
+Example
+```js
+getKeystroke();
+getKeystroke(0);
+getKeystroke({dwUserIndex: 0});
+//Output
+{
+  virtualKey: 'VK_PAD_A',
+  unicode: 0,
+  flags: [ 'XINPUT_KEYSTROKE_KEYDOWN' ],
+  userIndex: 0,
+  hidCode: 0
+}
+```
+
+If you want raw data output
+```js
+getKeystroke({translate: false});
+//output
+{ 
+  virtualKey: 22528, 
+  unicode: 0, 
+  flags: 1, 
+  userIndex: 0, 
+  hidCode: 0 
+}
+```
+
+📖 [XInputGetKeystroke](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetkeystroke)
+
 #### `getState(option?: number | obj): obj`
 
 Retrieves the current state of the specified controller.
