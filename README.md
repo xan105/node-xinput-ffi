@@ -171,14 +171,14 @@ Previous version(s) are CommonJS (CJS) with an ESM wrapper.
 
 💡 Promises are under the `promises` namespace.
 ```js
-import * as XInput from 'xinput-ffi';
+import * as XInput from "xinput-ffi";
 XInput.promises.isConnected() //Promise
 XInput.isConnected() //Sync
 
 import * as XInput from "xinput-ffi/promises"
 XInput.isConnected() //Promise
 
-import { promises } as XInput from 'xinput-ffi';
+import { promises as XInput } from "xinput-ffi";
 XInput.isConnected() //Promise
 ```
 
@@ -463,7 +463,7 @@ getState({translate: false});
 }
 ```
 
-💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone)
+💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone).<br/>
 This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj)
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
@@ -718,6 +718,8 @@ getCapabilitiesEx({translate: false});
 
 </details>
 
+<hr>
+
 <details><summary>Helper fn</summary>
 
 The following are sugar/helper functions based upon the previous XInput functions.
@@ -745,9 +747,9 @@ Which buttons are pressed if any.<br/>
 
 Index of the user's controller. Can be a value from 0 to 3.
 
-- deadzone?: number | number[] ([7849,8689])
+- deadzone?: number | number[] ( [7849,8689] )
 
-thumbstick deadzone(s)<br/>
+Thumbstick deadzone(s):<br/>
 Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]<br/>
 	    
 - directionThreshold?: number (0.2)
@@ -761,8 +763,7 @@ differentiate the 2 axes by using range of [-threshold,threshold].
 
 Trigger activation threshold. Range [0,255].
 
-
-Returns an object where:
+=> Returns an object where:
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
 - []string buttons : list of currently pressed [buttons](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
 - trigger.left/right :
@@ -901,6 +902,8 @@ Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this
 
 </details>
 
+<hr>
+
 <details><summary>Identify device (VID,PID,GUID,Name, ...)</summary>
 
 XInput doesn't provide VID/PID **by design**.<br />
@@ -916,11 +919,11 @@ List all **known** HID and USB connected devices **by matching with entries in**
 
 ⚙️ options:
 
-- XInputOnly>: boolean (true)
+- XInputOnly?: boolean (true)
 
 Return only XInput gamepad.
 
-Return an array of obj where
+=> Return an array of obj where
 - string name : device name
 - string manufacturer : vendor name
 - number vendorID : vendor id
