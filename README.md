@@ -161,7 +161,7 @@ npm install koffi
 ```
 
 _Prerequisite: C/C++ build tools and [CMake meta build system](https://cmake.org/) in order to build [koffi](https://www.npmjs.com/package/koffi)._<br/>
-_💡 [koffi](https://www.npmjs.com/package/koffi) provides prebuilt binaries so in most cases the above mentioned prerequisites aren't needed._
+_💡 Prebuilt binaries are provided so in most cases the above mentioned prerequisites aren't needed._
 
 API
 ===
@@ -908,12 +908,12 @@ Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this
 
 XInput doesn't provide VID/PID **by design**.<br />
 Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller.<br />
-Use this to query `WMI _Win32_PNPEntity` via `PowerShell` to scan for known gamepads.<br />
+Use this to query `WMI _Win32_PNPEntity` to scan for known gamepads.<br />
 It won't tell you which is connected to which XInput slot tho.
 
 #### `identify(option?: obj): Promise<obj[]>`
 
-⚠️ Promise only.
+⚠️ Promise only and requires PowerShell.
 
 List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
 
@@ -982,12 +982,3 @@ await identify();
 ```
 
 </details>
-
-Compatibility
-=============
-
-- Windows 8: xinput1_4
-- Windows 7 (DirectX SDK): xinput1_3
-- Windows Vista (Legacy): xinput9_1_0
-
-Identify device requires PowerShell.
