@@ -1,11 +1,12 @@
 About
 =====
 
-XInput <abbr title="Foreign Function Interface">FFI</abbr> wrapper: access native XInput functions as well as some helpers based around them.
+XInput FFI wrapper: access native XInput functions as well as some helpers based around them.
 
 This lib hooks directly to the system's dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).<br/>
 It aims to implement and expose XInput functions as close as possible to the document.<br/>
-"Hidden" XInput functions such as `XInputGetCapabilitiesEx()` are exposed as well.<br/>
+
+🔍 "Hidden" XInput functions such as `XInputGetCapabilitiesEx()` are exposed as well.
 
 Examples
 ========
@@ -13,7 +14,7 @@ Examples
 Vibration (_helper fn_)
 
 ```js
-import { rumble } from "xinput-ffi/promises";
+import { rumble } from "xinput-ffi;
 
 //Rumble 1st XInput gamepad
 await rumble();
@@ -24,6 +25,13 @@ await rumble({force: 100});
 //low-frequency rumble motor(left) at 50% 
 //and high-frequency rumble motor (right) at 25%
 await rumble({force: [50,25]});
+```
+
+Promise
+
+```js
+import { rumble } from "xinput-ffi/promises";
+await rumble({force: 50}); 
 ```
 
 Direct use of XInput function
@@ -130,10 +138,10 @@ console.log (await XInput.identify({XInputOnly: true}));
 /* Output:
   [
     {
-      manufacturer: 'Microsoft Corp.',
       name: 'Xbox360 Controller',
-      vid: '045E',
-      pid: '028E',
+      manufacturer: 'Microsoft Corp.',
+      vendorID: 1118,
+      productID: 654,
       xinput: true,
       interfaces: [ 'USB', 'HID' ],
       guid: [
@@ -169,6 +177,9 @@ XInput.isConnected() //Sync
 
 import * as XInput from "xinput-ffi/promises"
 XInput.isConnected() //Promise
+
+import { promises } as XInput from 'xinput-ffi';
+XInput.isConnected() //Promise
 ```
 
 ## Named export
@@ -195,7 +206,7 @@ Access XInput functions as documented by Microsoft.<br/>
 - ✔️ XInputCancelGuideButtonWait
 - ✔️ XInputPowerOffController
 - ⚠️ XInputGetBaseBusInformation _> Not working with all gamepad._
-- ✔️ XInputGetCapabilitiesEx;
+- ✔️ XInputGetCapabilitiesEx
 
 NB: Depending on which XInput dll version you are using *(1_4, 1_3, 9_1_0)* some functions won't be available.
 
@@ -206,7 +217,7 @@ This function is meant to be called when an application gains or loses focus.
 
 NB:
  - Stop any rumble currently playing when set to false.
- - setState will throw "ERR_DEVICE_NOT_CONNECTED" when this is set to false.
+ - setState will throw `ERR_DEVICE_NOT_CONNECTED` when this is set to false.
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
@@ -422,7 +433,7 @@ getState({dwUserIndex: 0});
 //Output
 {
   dwPacketNumber: 18165,
-  Gamepad: { 
+  gamepad: { 
     wButtons: ['XINPUT_GAMEPAD_A'],
     bLeftTrigger: 0,
     bRightTrigger: 0,
@@ -440,7 +451,7 @@ getState({translate: false});
 //output
 {
   dwPacketNumber: 322850,
-  Gamepad: {
+  gamepad: {
     wButtons: 4096,
     bLeftTrigger: 0,
     bRightTrigger: 0,
@@ -510,7 +521,7 @@ getStateEx({dwUserIndex: 0});
 //Output
 {
   dwPacketNumber: 18165,
-  Gamepad: { 
+  gamepad: { 
     wButtons: ['XINPUT_GAMEPAD_GUIDE'],
     bLeftTrigger: 0,
     bRightTrigger: 0,
@@ -528,7 +539,7 @@ getStateEx({translate: false});
 //output
 {
   dwPacketNumber: 322850,
-  Gamepad: {
+  gamepad: {
     wButtons: 1024,
     bLeftTrigger: 0,
     bRightTrigger: 0,
@@ -927,7 +938,7 @@ Output example with a DS4(wireless + cable) and ds4windows(_DirectInput -> XInpu
   {
     name: 'Xbox360 Controller',
     manufacturer: 'Microsoft Corp.',
-    vid: 1118,
+    vendorID: 1118,
     productID: 654,
     xinput: true,
     interfaces: [ 'USB', 'HID' ],
