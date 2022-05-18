@@ -14,7 +14,7 @@ Examples
 Vibration (_helper fn_)
 
 ```js
-import { rumble } from "xinput-ffi;
+import { rumble } from "xinput-ffi";
 
 //Rumble 1st XInput gamepad
 await rumble();
@@ -773,6 +773,31 @@ Returns an object where:
 	+ float y: normalized (deadzone) y axis [0.0,1.0]. 0 is centered. Negative values is down. Positive values is up.
 	+ float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
 	+ []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
+
+```js
+{
+  packetNumber: 132309,
+  buttons: [ 'XINPUT_GAMEPAD_A' ],
+  trigger: {
+    left: { active: true, force: 255 },
+    right: { active: false, force: 0 }
+  },
+  thumb: {
+    left: {
+      x: -0.6960457056589758,
+      y: 0.717997476063599,
+      magnitude: 1,
+      direction: [ 'UP', 'LEFT' ]
+    },
+    right: {
+      x: 0.039307955814283674,
+      y: 0.9992271436513833,
+      magnitude: 1,
+      direction: [ 'UP' ]
+    }
+  }
+}
+```
 
 <details>
  <summary>Electron example:</summary>
