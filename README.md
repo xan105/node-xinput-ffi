@@ -936,6 +936,9 @@ Return only XInput gamepad.
 
 Output example with a DS4(wireless + cable) and ds4windows(_DirectInput -> XInput wrapper_):
 ```js
+import { identify } from "xinput-ffi/promises";
+await identify();
+//Output
 [
   {
     name: 'DualShock 4 (v2)',
