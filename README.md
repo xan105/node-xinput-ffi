@@ -173,7 +173,7 @@ XInput.isConnected() //Promise
 
 ## Named export
 
-### 1️⃣  XInput fn 
+<details><summary>XInput fn</summary>
 
 Access XInput functions as documented by Microsoft.<br/>
 📖 [Microsoft documentation](https://docs.microsoft.com/en-us/windows/win32/xinput/functions)
@@ -197,7 +197,7 @@ Access XInput functions as documented by Microsoft.<br/>
 - ⚠️ XInputGetBaseBusInformation _> Not working with all gamepad._
 - ✔️ XInputGetCapabilitiesEx;
 
-NB: Depending on which XInput dll version you are using _(1_4, 1_3, 9_1_0)_ some functions won't be available.
+NB: Depending on which XInput dll version you are using *(1_4, 1_3, 9_1_0)* some functions won't be available.
 
 #### `enable(enable: boolean): void`
 
@@ -348,7 +348,7 @@ getCapabilities({translate: false});
 
 Retrieves a gamepad input event.<br/>
 To be honest, this isn't really useful since the chatpad feature wasn't implemented on Windows.<br/>
-NB: If no new keys have been pressed, this will throw with ERROR_EMPTY.
+⚠️ NB: If no new keys have been pressed, this will throw with ERROR_EMPTY.
 
 ⚙️ options:
 
@@ -401,17 +401,16 @@ Retrieves the current state of the specified controller.
 
 ⚙️ options:
 
-- gamepadIndex?: number 
+- dwUserIndex?: number (0)
 
-Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+Index of the user's controller. Can be a value from 0 to 3.
 
-- translate?: boolean
+- translate?: boolean (true)
 
-When a value is known it will be 'translated' to its string equivalent value otherwise its integer value (_defaults to true_).<br/>
-If you want the raw data output set it to false.
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
 
-If `option` is a number it will be used as gamepadIndex.<br/>
-If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
 Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
 
@@ -419,9 +418,10 @@ Example
 ```js
 getState();
 getState(0);
+getState({dwUserIndex: 0});
 //Output
 {
-  dwPacketNumber: 322850,
+  dwPacketNumber: 18165,
   Gamepad: { 
     wButtons: ['XINPUT_GAMEPAD_A'],
     bLeftTrigger: 0,
@@ -439,7 +439,7 @@ If you want raw data output
 getState({translate: false});
 //output
 {
-  dwPacketNumber: 18165,
+  dwPacketNumber: 322850,
   Gamepad: {
     wButtons: 4096,
     bLeftTrigger: 0,
@@ -457,63 +457,299 @@ This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 
-#### `setState(lowFrequency: number, highFrequency: number, gamepadIndex?: number): void`
+#### `setState(lowFrequency: number, highFrequency: number, option ?: number | object): void`
 
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
-gamepadIndex: Index of the user's controller. Can be a value from 0 to 3.<br />
-gamepadIndex defaults to 0 (1st XInput gamepad)<br />
-If gamepad is not connected throw "ERROR_DEVICE_NOT_CONNECTED".
+⚙️ options:
 
-💡 `XInputSetState` valid values are in the range 0 to 65535.<br />
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+- usePercent?: boolean (true)
+
+`XInputSetState` valid values are in the range 0 to 65535.<br />
 Zero signifies no motor use; 65535 signifies 100 percent motor use.<br />
-`lowFrequency` and `highFrequency` are in % (0-100) for convenience.
+`lowFrequency` and `highFrequency` are in % (0-100) for convenience when you set this to true.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
 NB:
 - You need to keep the event-loop alive otherwise the vibration will terminate with your program.<br />
 - You need to reset the state to 0 for both frequency before using setState again.<br />
 
-Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-obj-void) (see below in Helper fn...)
+Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-obj-void)
 
 📖 [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate)
 
-<hr>
+#### `getStateEx(option?: number | object): object`
 
-### 2️⃣ Helper fn
+The same as `XInputGetState`, adding the "Guide" button (0x0400).
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+- translate?: boolean (true)
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_state) structure.
+
+Example
+```js
+getStateEx();
+getStateEx(0);
+getStateEx({dwUserIndex: 0});
+//Output
+{
+  dwPacketNumber: 18165,
+  Gamepad: { 
+    wButtons: ['XINPUT_GAMEPAD_GUIDE'],
+    bLeftTrigger: 0,
+    bRightTrigger: 0,
+    sThumbLX: 128,
+    sThumbLY: 641,
+    sThumbRX: -1156,
+    sThumbRY: -129
+  }
+}
+```
+
+If you want raw data output
+```js
+getStateEx({translate: false});
+//output
+{
+  dwPacketNumber: 322850,
+  Gamepad: {
+    wButtons: 1024,
+    bLeftTrigger: 0,
+    bRightTrigger: 0,
+    sThumbLX: 257,
+    sThumbLY: 767,
+    sThumbRX: 773,
+    sThumbRY: 1279
+  }
+}
+```
+
+#### `waitForGuideButton(option?: number | object): void`
+
+Wait until Guide button is pressed.<br/>
+NB: ⚠️ calling triggers `ERROR_BAD_ARGUMENTS` (to-do: fixme).
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+- dwFlags?: number (0)
+
+Wait behavior:<br/>
+0: Blocking 1: Async<br/>
+It's not clear on how to get the async option to report.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+#### `cancelGuideButtonWait(option?: number | object): void`
+
+If `XInputWaitForGuideButton` was activated in async mode, this will stop it.
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+#### `powerOffController(option?: number | object): void`
+
+Power off a controller.
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+#### `getBaseBusInformation(option?: number | object): object`
+
+⚠️ Not working on all gamepads. It can refuse and return `ERROR_DEVICE_NOT_CONNECTED`, even if connected.
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+Returns an object like the following structure:
+```c++
+struct XINPUT_BASE_BUS_INFORMATION
+{
+   WORD unk1;
+   WORD unk2;
+   DWORD unk3;
+   DWORD Flags; // probably
+   BYTE unk4;
+   BYTE unk5;
+   BYTE unk6;
+   BYTE reserved;
+ }
+```
+
+#### `getCapabilitiesEx(option?: number | object): object`
+
+The same as `XInputGetCapabilities` but with added properties such as vendorID and productID.
+
+
+⚙️ options:
+
+- dwUserIndex?: number (0)
+
+Index of the user's controller. Can be a value from 0 to 3.
+
+- translate?: boolean (true)
+
+When a value is known it will be 'translated' to its string equivalent value otherwise its integer value.<br/>
+If you want the raw data only set it to false.
+
+💡 If `option` is a number it will be used as dwUserIndex.<br/>
+
+Returns an object similar to 📖 [XINPUT_CAPABILITIES](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_capabilities) structure.<br/>
+See below for details.
+
+Example
+```js
+getCapabilitiesEx();
+getCapabilitiesEx(0);
+getCapabilitiesEx({gamepadIndex: 0});
+//Output
+{
+  capabilities: {
+    type: 'XINPUT_DEVTYPE_GAMEPAD',
+    dubType: 'XINPUT_DEVSUBTYPE_GAMEPAD',
+    flags: [ 'XINPUT_CAPS_VOICE_SUPPORTED', 'XINPUT_CAPS_PMD_SUPPORTED' ],
+    gamepad: {
+      wButtons: [
+        'XINPUT_GAMEPAD_DPAD_UP',
+        'XINPUT_GAMEPAD_DPAD_DOWN',
+        'XINPUT_GAMEPAD_DPAD_LEFT',
+        'XINPUT_GAMEPAD_DPAD_RIGHT',
+        'XINPUT_GAMEPAD_START',
+        'XINPUT_GAMEPAD_BACK',
+        'XINPUT_GAMEPAD_LEFT_THUMB',
+        'XINPUT_GAMEPAD_RIGHT_THUMB',
+        'XINPUT_GAMEPAD_LEFT_SHOULDER',
+        'XINPUT_GAMEPAD_RIGHT_SHOULDER',
+        'XINPUT_GAMEPAD_A',
+        'XINPUT_GAMEPAD_B',
+        'XINPUT_GAMEPAD_X',
+        'XINPUT_GAMEPAD_Y'
+      ],
+      bLeftTrigger: 255,
+      bRightTrigger: 255,
+      sThumbLX: -64,
+      sThumbLY: -64,
+      sThumbRX: -64,
+      sThumbRY: -64
+    },
+    vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
+  },
+  vendorId: 'Microsoft Corp.',
+  productId: 'Xbox360 Controller',
+  versionNumber: 276,
+  unk1: 826265564
+}
+```
+
+If you want raw data output
+```js
+getCapabilitiesEx({translate: false});
+//output
+{
+  capabilities: {
+    type: 1,
+    dubType: 1,
+    flags: 12,
+    gamepad: {
+      wButtons: 62463,
+      bLeftTrigger: 255,
+      bRightTrigger: 255,
+      sThumbLX: -64,
+      sThumbLY: -64,
+      sThumbRX: -64,
+      sThumbRY: -64
+    },
+    vibration: { 
+      wLeftMotorSpeed: 255, 
+      wRightMotorSpeed: 255 
+    }
+  },
+  vendorId: 1118,
+  productId: 654,
+  versionNumber: 276,
+  unk1: 826265564
+}
+```
+
+</details>
+
+<details><summary>Helper fn</summary>
 
 The following are sugar/helper functions based upon the previous XInput functions.
 
+#### `isConnected(gamepad?: number): boolean`
+
+Whether the specified controller is connected or not.<br />
+Returns true/false.
+
+#### `listConnected(): boolean[]`
+
+Returns an array of connected status for all controller.<br />
+eg: [true,false,false,false] => Only 1st gamepad is connected
+
 #### `getButtonsDown(option?: obj): obj`
 
-Normalize getState() information for convenience:<br/> 
+Normalize `getState()` information for convenience:<br/> 
 ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
 Trigger state and force (taking threshold into account).<br/>
 Which buttons are pressed if any.<br/>
 
 ⚙️ options:
 
-- gamepadIndex: 
+- gamepad?: number (0) 
 
-Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
+Index of the user's controller. Can be a value from 0 to 3.
 
-- deadzone: 
+- deadzone?: number | number[] ([7849,8689])
 
 thumbstick deadzone(s)<br/>
 Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]<br/>
-_defaults to XInput default's values of [7849,8689]_<br/> 
 	    
-- directionThreshold: 
+- directionThreshold?: number (0.2)
 
 float [0.0,1.0] to handle cardinal direction.<br/>
- Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".<br/>
+Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".<br/>
 Otherwise add "RIGHT", "LEFT", "UP", "DOWN" to the previous using threshold to <br/>
-differentiate the 2 axes by using range of [-threshold,threshold].<br/>
-_defaults to 0.2_<br/>
+differentiate the 2 axes by using range of [-threshold,threshold].
 		      
-- triggerThreshold: 
+- triggerThreshold?: number (30)
 
-int [0,255] trigger activation threshold.<br/>
- _defaults to XInput value of 30_<br/>
+Trigger activation threshold. Range [0,255].
+
 
 Returns an object where:
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
@@ -604,29 +840,36 @@ function inputLoop(){
 This function is used to activate the vibration function of a controller.<br />
 
 ⚙️ options:
-  - gamepadIndex: Index of the user's controller. Can be a value from 0 to 3. _defaults to 0 (1st XInput gamepad)_
-  - force : Rumble force in % (0-100) to apply to the motors. 
-            Either an integer (both motor with the same value) or an array of 2 integer: [left,right]
-            _defaults to [50,25]_
-  - duration: Rumble duration in ms. Max: 2500 ms. _defaults to max_
-  - forceEnableGamepad: Use **enable()** to force the activation of XInput gamepad before rumble. _defaults to false_
-  - forceStateWhileRumble: Bruteforce _-ly_ (spam) set state() for the duration of the vibration. Use this when a 3rd party reset your state or whatever. Usage of this option is not recommended and default to false. Use only when needed.
-  
-#### `isConnected(gamepadIndex?: number): boolean`
 
-whether the specified controller is connected or not.<br />
-Returns true/false
+- gamepad?: number (0) 
 
-#### `listConnected(): boolean[]`
+Index of the user's controller. Can be a value from 0 to 3.
 
-Returns an array of connected status for all controller.<br />
-eg: [true,false,false,false] //Only 1st gamepad is connected
+- force?: number | number[] ([50,25])
 
-<hr>
+Vibration force in % (0-100) to apply to the motors.<br/>
+Either an integer (both motor with the same value) or an array of 2 integer: [left,right]
 
-### 3️⃣ Identify device (VID,PID,GUID,Name, ...)
+- duration?: number (2500)
 
-Since XInput doesn't provide VID/PID **by design**, query WMI _Win32_PNPEntity_ via PowerShell instead.<br />
+Vibration duration in ms. Max: ~2500 ms.
+
+- forceEnableGamepad?: boolean (false)
+
+Use `enable()` to force the activation of XInput gamepad before vibration.
+ 
+- forceStateWhileRumble?: boolean (false)
+
+Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this when a 3rd party reset your state or whatever.<br/> 
+⚠️ Usage of this option is not recommended use only when needed.
+
+</details>
+
+<details><summary>Identify device (VID,PID,GUID,Name, ...)</summary>
+
+XInput doesn't provide VID/PID **by design**.<br />
+Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller.<br />
+Use this to query `WMI _Win32_PNPEntity` via `PowerShell` to scan for known gamepads.<br />
 It won't tell you which is connected to which XInput slot tho.
 
 #### `identify(option?: obj): Promise<obj[]>`
@@ -637,27 +880,29 @@ List all **known** HID and USB connected devices **by matching with entries in**
 
 ⚙️ options:
 
-- XInputOnly: Return only XInput gamepad. _defaults to true_
+- XInputOnly>: boolean (true)
+
+Return only XInput gamepad.
 
 Return an array of obj where
-- string manufacturer : vendor name
 - string name : device name
-- string vid : vendor id (unique)
-- string pid : product id (unique)
+- string manufacturer : vendor name
+- number vendorID : vendor id
+- number productID : product id
 - string[] interfaces : PNPentity interface(s) found; Available: HID and USB
 - string[] guid: classguid(s) found
-- boolean xinput: If it's a XInput device or not
+- boolean xinput: a XInput device or not
 
 💡 obj are unique by their vid/pid
 
-Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrapper_):
+Output example with a DS4(wireless + cable) and ds4windows(_DirectInput -> XInput wrapper_):
 ```js
 [
   {
+    name: 'DualShock 4 (v2)',
     manufacturer: 'Sony Corp.',
-    name: 'DualShock 4',
-    vid: '054C',
-    pid: '09CC',
+    vendorID: 1356,
+    productID: 2508,
     xinput: false,
     interfaces: [ 'USB', 'HID' ],
     guid: [
@@ -667,10 +912,10 @@ Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrappe
     ]
   },
   {
-    manufacturer: 'Sony Corp.',
     name: 'DualShock 4 USB Wireless Adaptor',
-    vid: '054C',
-    pid: '0BA0',
+    manufacturer: 'Sony Corp.',
+    vendorID: 1356,
+    productID: 2976,
     xinput: false,
     interfaces: [ 'USB', 'HID' ],
     guid: [
@@ -680,10 +925,10 @@ Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrappe
     ]
   },
   {
-    manufacturer: 'Microsoft Corp.',
     name: 'Xbox360 Controller',
-    vid: '045E',
-    pid: '028E',
+    manufacturer: 'Microsoft Corp.',
+    vid: 1118,
+    productID: 654,
     xinput: true,
     interfaces: [ 'USB', 'HID' ],
     guid: [
@@ -693,6 +938,8 @@ Output example with a DS4(wireless) and ds4windows(_DirectInput -> XInput wrappe
   }
 ]
 ```
+
+</details>
 
 Compatibility
 =============
