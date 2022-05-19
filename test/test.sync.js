@@ -1,6 +1,6 @@
 import * as XInput from "../lib/index.js";
 
-console.log(XInput.listConnected()); //ok
+console.log(XInput.listConnected());
 console.log(XInput.getBatteryInformation());
 console.log(XInput.getCapabilities());
 console.log(XInput.getState({translate: false}));
@@ -16,13 +16,13 @@ console.log(isConnected);
 */
 
 /*
-XInput.rumble(); //ok
-XInput.rumble({force: 100}); //ok
-XInput.rumble({force: [25,25]}); //ok
-XInput.rumble({duration: 500}); //ok
-XInput.rumble({duration: 5000}); //ok
-XInput.rumble({gamepadIndex: 10}); //ok
-console.log(1);XInput.rumble();console.log(2);XInput.rumble();console.log("end"); //ok
+//XInput.rumble(); //ok
+//XInput.rumble({force: 100}); //ok
+//XInput.rumble({force: [25,25]}); //ok
+//XInput.rumble({duration: 500}); //ok
+//XInput.rumble({duration: 5000}); //ok
+//XInput.rumble({gamepad: 10}); //ok
+//console.log(1);XInput.rumble();console.log(2);XInput.rumble();console.log("end"); //ok
 */
 
 /*
