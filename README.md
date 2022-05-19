@@ -801,73 +801,73 @@ Trigger activation threshold. Range [0,255].
 ```
 
 <details>
- <summary>Electron example:</summary>
+ <summary>Display input example:</summary>
  
 ```js
-let state = { previous : 0, current : 0 };
-
-function inputLoop(){
-
-	XInput.getButtonsDown()
-	.then((controller)=>{
-		
-		state.current = controller.packetNumber; 
-		
-		if (state.current > state.previous){ //State update
-			//Current buttons down
-			console.log(controller.buttons)
-			
-			//Current thumbstick direction
-			console.log(controller.thumb.left.direction);
-			console.log(controller.thumb.right.direction);
-			
-			//Current trigger status
-			if (controller.trigger.left.active) 
-				console.log(`trigger L (${controller.trigger.left.force})`);
-			if (controller.trigger.right.active) 
-				console.log(`trigger R (${controller.trigger.right.force})`);
-			
-		}
-		
-		state.previous = state.current;
-
-	})
-	.catch((err)=>{
-		console.warn(err);
-	})
-	.finally(()=>{
-		window.requestAnimationFrame(inputLoop); 
-	});
-}
-window.requestAnimationFrame(inputLoop);
-```
-
-NB: To handle button up (press down then release)<br/>
-ignoring hold button until they are released<br/>
-You should store the previous buttons state and check it against the current.<br/>
-
-Example:
-	
-```js
 let state = {
-	previous : {
-		packetNumber: 0,
-		buttons: []
-	}, current : {}
+  previous : {
+    packetNumber: 0,
+    buttons: []
+  },
+  current : {}
 };
 
-function inputLoop(){
+/*
+Handle button up (press down then release).
+Ignoring hold button until they are released.
+Set pressRelease to true.
+*/
+const pressRelease = true;
 
-	XInput.getButtonsDown()
-	.then((controller)=>{
-	
-		state.current = controller;
-		if (state.current.packetNumber > state.previous.packetNumber){ //State update		
-			const diff = state.previous.buttons.filter(btn => !state.current.buttons.includes(btn)) 
-			console.log(diff);
+function loop(){
+
+  getButtonsDown()
+  .then((controller)=>{
+		
+    state.current = controller;
+		
+    if (state.current.packetNumber > state.previous.packetNumber){ //State update
+		
+      //Buttons
+      if(pressRelease === true){
+        //check against the previous buttons state
+        const diff = state.previous.buttons.filter(btn => !state.current.buttons.includes(btn))
+        if (diff.length > 0) console.log(diff);
+      } else {
+        if (state.current.buttons.length > 0) console.log(state.current.buttons)
+      }
+      
+      //Trigger
+      if (state.current.trigger.left.active) 
+        console.log("trigger L " + state.current.trigger.left.force);
+      if (state.current.trigger.right.active) 
+        console.log("trigger R " + state.current.trigger.right.force);
+			
+      //JY
+      if (state.current.thumb.left.direction.length > 0)
+        console.log(state.current.thumb.left.direction);
+      if (state.current.thumb.right.direction.length > 0)
+        console.log(state.current.thumb.right.direction);
 		}
 		
-		...
+    state.previous = state.current;  //store previous state
+  })
+  .catch((err)=>{
+    console.warn(err);
+  })
+  .finally(()=>{
+    start();
+  });
+}
+
+function start(){
+  if (typeof window !== 'undefined' && typeof window.document !== 'undefined')
+    window.requestAnimationFrame(loop); //electron
+  else
+    setTimeout(loop, 1000 / 60 ); //Node.js
+}
+
+start();
 ```
 
 </details>

@@ -22,5 +22,13 @@
       "no-eval": "error",
       "require-await": "warn",
       "no-useless-escape": "warn"
-    }
+    },
+    "overrides": [
+      {
+        "files": ["test/test.loop.js"],
+        "rules": {
+          "no-undef": ["warn"]
+        }
+      }
+    ]
 }
