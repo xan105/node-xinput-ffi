@@ -157,7 +157,7 @@ Installation
 ============
 
 ```
-npm install koffi
+npm install xinput-ffi
 ```
 
 _Prerequisite: C/C++ build tools and [CMake meta build system](https://cmake.org/) in order to build [koffi](https://www.npmjs.com/package/koffi)._<br/>
@@ -202,7 +202,7 @@ Access XInput functions as documented by Microsoft.<br/>
 📖 [Reverse Engineer's log](https://reverseengineerlog.blogspot.com/2016/06/xinputs-hidden-functions.html)
 
 - ✔️ XInputGetStateEx
-- ⚠️ XInputWaitForGuideButton _> calling triggers ERROR_BAD_ARGUMENTS (to-do: fixme)._
+- ✔️ XInputWaitForGuideButton
 - ✔️ XInputCancelGuideButtonWait
 - ✔️ XInputPowerOffController
 - ⚠️ XInputGetBaseBusInformation _> Not working with all gamepad._
@@ -553,8 +553,7 @@ getStateEx({translate: false});
 
 #### `waitForGuideButton(option?: number | object): void`
 
-Wait until Guide button is pressed.<br/>
-NB: ⚠️ calling triggers `ERROR_BAD_ARGUMENTS` (to-do: fixme).
+Wait until Guide button is pressed.
 
 ⚙️ options:
 
@@ -624,7 +623,6 @@ struct XINPUT_BASE_BUS_INFORMATION
 #### `getCapabilitiesEx(option?: number | object): object`
 
 The same as `XInputGetCapabilities` but with added properties such as vendorID and productID.
-
 
 ⚙️ options:
 
@@ -755,9 +753,12 @@ Either an integer (both thumbstick with the same value) or an array of 2 integer
 - directionThreshold?: number (0.2)
 
 float [0.0,1.0] to handle cardinal direction.<br/>
-Set it to 0 to only get "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".<br/>
-Otherwise add "RIGHT", "LEFT", "UP", "DOWN" to the previous using threshold to <br/>
+Set it to `0` so `direction[]` only reports "UP RIGHT", "UP LEFT", "DOWN LEFT", "DOWN RIGHT".<br/>
+Otherwise "RIGHT", "LEFT", "UP", "DOWN" will be added to the above using threshold to <br/>
 differentiate the 2 axes by using range of [-threshold,threshold].
+
+💡 If you **just** want "RIGHT", "LEFT", "UP" and "DOWN" the easiest way is to set this to `0.8` with the default deadzone.<br/>
+Alternatively play with this value and/or deadzone to decide on a thresold and ignore when `direction[]` has a length of 2.
 		      
 - triggerThreshold?: number (30)
 
@@ -907,7 +908,7 @@ Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this
 <details><summary>Identify device (VID,PID,GUID,Name, ...)</summary>
 
 XInput doesn't provide VID/PID **by design**.<br />
-Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller.<br />
+Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller (real one or through XInput emulation).<br />
 Use this to query `WMI _Win32_PNPEntity` to scan for known gamepads.<br />
 It won't tell you which is connected to which XInput slot tho.
 

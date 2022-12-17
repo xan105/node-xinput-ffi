@@ -1,3 +1,5 @@
-test/
 .github/
+test/
+.nyc_output/
 .eslintrc.json
+tsconfig.json
