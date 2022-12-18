@@ -13,8 +13,8 @@
       "default": "./lib/promises.js"
     },
     "./constants": {
-      "types": "./types/data/Controller.d.ts",
-      "default": "./data/Controller.js"
+      "types": "./types/constants.d.ts",
+      "default": "./lib/constants.js"
     }
   },
   "types": "./types/index.d.ts",
