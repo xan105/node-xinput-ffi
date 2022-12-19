@@ -1,26 +1,31 @@
 {
   "name": "xinput-ffi",
   "version": "3.0.0",
-  "description": "XInput FFI wrapper: access native XInput functions as well as some helpers based around them.",
+  "description": "XInput and XInputOnGameInput FFI wrapper: access native XInput functions as well as some helpers based around them.",
   "type": "module",
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
       "default": "./lib/index.js"
     },
+    "./constants": {
+      "types": "./types/constants.d.ts",
+      "default": "./lib/constants.js"
+    },
     "./promises": {
       "types": "./types/promises.d.ts",
       "default": "./lib/promises.js"
     },
-    "./constants": {
-      "types": "./types/constants.d.ts",
-      "default": "./lib/constants.js"
-    }
+    "./XInputOnGameInput": {
+      "types": "./types/XInputOnGameInput/index.d.ts",
+      "default": "./lib/XInputOnGameInput/index.js"
+    },
+    "./XInputOnGameInput/promises": {
+      "types": "./types/XInputOnGameInput/promises.d.ts",
+      "default": "./lib/XInputOnGameInput/promises.js"
+    },
   },
   "types": "./types/index.d.ts",
-  "os": [
-    "win32"
-  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -30,7 +35,8 @@
     "declare": "tsc --declaration --emitDeclarationOnly --outDir \"./types\""
   },
   "keywords": [
-    "xinput",
+    "XInput",
+    "XInputOnGameInput",
     "rumble",
     "gamepad",
     "ffi",
