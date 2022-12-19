@@ -23,7 +23,7 @@
     "./XInputOnGameInput/promises": {
       "types": "./types/XInputOnGameInput/promises.d.ts",
       "default": "./lib/XInputOnGameInput/promises.js"
-    },
+    }
   },
   "types": "./types/index.d.ts",
   "engines": {
