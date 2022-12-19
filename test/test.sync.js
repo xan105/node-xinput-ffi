@@ -1,9 +1,21 @@
 import * as XInput from "../lib/index.js";
 
-console.log(XInput.listConnected());
-console.log(XInput.getBatteryInformation());
-console.log(XInput.getCapabilities());
-console.log(XInput.getState({translate: false}));
+console.log(
+  XInput.listConnected(),
+  XInput.getBatteryInformation(),
+  XInput.getCapabilities(),
+  XInput.getCapabilitiesEx()
+);
+
+console.log("press guide button to continue...");
+XInput.waitForGuideButton();
+
+console.log(
+  XInput.getState({translate: false}),
+  XInput.getStateEx()
+);
+
+XInput.rumble();
 
 /*
 //const isConnected = XInput.isConnected(0); //ok
@@ -16,7 +28,6 @@ console.log(isConnected);
 */
 
 /*
-//XInput.rumble(); //ok
 //XInput.rumble({force: 100}); //ok
 //XInput.rumble({force: [25,25]}); //ok
 //XInput.rumble({duration: 500}); //ok

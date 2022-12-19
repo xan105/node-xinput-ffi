@@ -7,13 +7,22 @@ const gamepad = new XInputGamepad({
 
 gamepad.on("input", (buttons)=>{ 
   setImmediate(() => {
-    console.log(buttons);
+  
+    switch(buttons[0]) {
+      case "XINPUT_GAMEPAD_GUIDE":
+        console.log(buttons, "=> Exiting ...");
+        gamepad.removeAllListeners(); //free
+        gamepad.stop(); //stop gamepad eventloop (timersPromises.setInterval)
+        break;
+      default:
+        console.log(buttons);
+    } 
+    
   });
 });
 
-gamepad.poll();
-
-/* when done
-gamepad.removeAllListeners();
-gamepad.stop(); //stop gamepad eventloop (timersPromises.setInterval)
-*/
+try{
+  gamepad.poll();
+}catch(err){
+  console.error(err);
+}

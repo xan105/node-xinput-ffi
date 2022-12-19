@@ -13,7 +13,7 @@ Handle button up (press down then release).
 Ignoring hold button until they are released.
 Set pressRelease to true.
 */
-const pressRelease = true;
+const pressRelease = false;
 
 function loop(){
 
@@ -41,9 +41,9 @@ function loop(){
 			
       //JY
       if (state.current.thumb.left.direction.length > 0)
-        console.log(state.current.thumb.left.direction);
+        console.log(state.current.thumb.left.direction, Math.ceil( state.current.thumb.left.magnitude * 100 ) + "% (J LEFT)");
       if (state.current.thumb.right.direction.length > 0)
-        console.log(state.current.thumb.right.direction);
+        console.log(state.current.thumb.right.direction, Math.ceil( state.current.thumb.right.magnitude * 100 ) + "% (J RIGHT)");
 		}
 		
     state.previous = state.current;  //store previous state
@@ -58,9 +58,9 @@ function loop(){
 
 function start(){
   if (typeof window !== 'undefined' && typeof window.document !== 'undefined')
-    window.requestAnimationFrame(loop); //electron
+    window.requestAnimationFrame(loop); //electron (renderer)
   else
-    setTimeout(loop, 1000 / 60 ); //Node.js
+    setTimeout(loop, 1000 / 250 /*Usually 60 hz*/ ); //Node.js
 }
 
 start();
