@@ -217,7 +217,7 @@ This function is meant to be called when an application gains or loses focus.
 
 NB:
  - Stop any rumble currently playing when set to false.
- - setState will throw `ERR_DEVICE_NOT_CONNECTED` when this is set to false.
+ - This may trigger `ERR_DEVICE_NOT_CONNECTED` for set/getState(Ex) when set to false and there was no prior input ever.
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
