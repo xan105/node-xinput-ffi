@@ -50,18 +50,7 @@ console.log(capabilities);
     wButtons: [
       'XINPUT_GAMEPAD_DPAD_UP',
       'XINPUT_GAMEPAD_DPAD_DOWN',
-      'XINPUT_GAMEPAD_DPAD_LEFT',
-      'XINPUT_GAMEPAD_DPAD_RIGHT',
-      'XINPUT_GAMEPAD_START',
-      'XINPUT_GAMEPAD_BACK',
-      'XINPUT_GAMEPAD_LEFT_THUMB',
-      'XINPUT_GAMEPAD_RIGHT_THUMB',
-      'XINPUT_GAMEPAD_LEFT_SHOULDER',
-      'XINPUT_GAMEPAD_RIGHT_SHOULDER',
-      'XINPUT_GAMEPAD_A',
-      'XINPUT_GAMEPAD_B',
-      'XINPUT_GAMEPAD_X',
-      'XINPUT_GAMEPAD_Y'
+      //etc...
     ],
     bLeftTrigger: 255,
     bRightTrigger: 255,
@@ -151,6 +140,74 @@ console.log (await XInput.identify({XInputOnly: true}));
     }
   ]
 */
+```
+
+### Electron
+
+Here is an example of a simple XInput menu navigation system using the high level XInput implementation found in this module (helper).
+
+main process
+
+```js
+
+let gamepad;
+
+mainWin.once("ready-to-show", async() => { 
+
+  const { XInputGamepad } = await import("xinput-ffi/promises");
+  gamepad = new XInputGamepad();
+  
+  //send single input to renderer (no combo btn)
+  gamepad.on("input", (buttons)=>{ 
+    setImmediate(() => {
+      mainWin.webContents.send("onGamepadInput", buttons[0]); 
+    });
+  });
+  
+  gamepad.poll(); //gamepad event loop
+  mainWin.show();
+  mainWin.focus();
+  
+ });
+
+  //gain/loose focus
+  mainWin.on("blur", () => {
+    gamepad?.pause();
+  });
+  mainWin.on("focus", () => {
+    gamepad?.resume();
+  });
+
+  //clean up
+  mainWin.on("closed", () => {
+    mainWin = null;
+    gamepad?.removeAllListeners();
+    gamepad?.stop();
+    gamepad = null;
+  });
+
+```
+
+contextBridge (preload)
+
+```js
+contextBridge.exposeInMainWorld("ipcRenderer", {
+  onGamepadInput: (callback) => ipcRenderer.on("onGamepadInput", callback)
+});
+```
+
+renderer
+
+```js
+window.ipcRenderer.onGamepadInput((event, input) => {
+    switch(input){
+      case "XINPUT_GAMEPAD_DPAD_UP":
+        //do something
+        break;
+      default:
+        console.log(input);
+    }
+  });
 ```
 
 Installation
@@ -599,24 +656,25 @@ Index of the user's controller. Can be a value from 0 to 3.
 
 ⚙️ options:
 
-- dwUserIndex?: number (0)
+- dwBusIndex?: number (0)
 
-Index of the user's controller. Can be a value from 0 to 3.
+Bus index. Can be a value from 0 to 16.
 
-💡 If `option` is a number it will be used as dwUserIndex.<br/>
+💡 If `option` is a number it will be used as dwBusIndex?.<br/>
 
 Returns an object like the following structure:
 ```c++
 struct XINPUT_BASE_BUS_INFORMATION
 {
-   WORD unk1;
-   WORD unk2;
-   DWORD unk3;
-   DWORD Flags; // probably
-   BYTE unk4;
-   BYTE unk5;
-   BYTE unk6;
-   BYTE reserved;
+  WORD VendorId, //unknown
+  WORD ProductId, //unknown
+  WORD InputId, //unknown
+  WORD Field_6, //unknown
+  DWORD Field_8, //unknown
+  BYTE Field_C, //unknown
+  BYTE Field_D, //unknown
+  BYTE Field_E, //unknown
+  BYTE Field_F //unknown
  }
 ```
 
@@ -679,8 +737,7 @@ getCapabilitiesEx({gamepadIndex: 0});
   },
   vendorId: 'Microsoft Corp.',
   productId: 'Xbox360 Controller',
-  versionNumber: 276,
-  unk1: 826265564
+  productVersion: 276,
 }
 ```
 
@@ -709,8 +766,7 @@ getCapabilitiesEx({translate: false});
   },
   vendorId: 1118,
   productId: 654,
-  versionNumber: 276,
-  unk1: 826265564
+  productVersion: 276,
 }
 ```
 
@@ -800,79 +856,7 @@ Trigger activation threshold. Range [0,255].
   }
 }
 ```
-
-<details>
- <summary>Display input example:</summary>
- 
-```js
-let state = {
-  previous : {
-    packetNumber: 0,
-    buttons: []
-  },
-  current : {}
-};
-
-/*
-Handle button up (press down then release).
-Ignoring hold button until they are released.
-Set pressRelease to true.
-*/
-const pressRelease = true;
-
-function loop(){
-
-  getButtonsDown()
-  .then((controller)=>{
-		
-    state.current = controller;
-		
-    if (state.current.packetNumber > state.previous.packetNumber){ //State update
-		
-      //Buttons
-      if(pressRelease === true){
-        //check against the previous buttons state
-        const diff = state.previous.buttons.filter(btn => !state.current.buttons.includes(btn))
-        if (diff.length > 0) console.log(diff);
-      } else {
-        if (state.current.buttons.length > 0) console.log(state.current.buttons)
-      }
-      
-      //Trigger
-      if (state.current.trigger.left.active) 
-        console.log("trigger L " + state.current.trigger.left.force);
-      if (state.current.trigger.right.active) 
-        console.log("trigger R " + state.current.trigger.right.force);
-			
-      //JY
-      if (state.current.thumb.left.direction.length > 0)
-        console.log(state.current.thumb.left.direction);
-      if (state.current.thumb.right.direction.length > 0)
-        console.log(state.current.thumb.right.direction);
-		}
-		
-    state.previous = state.current;  //store previous state
-  })
-  .catch((err)=>{
-    console.warn(err);
-  })
-  .finally(()=>{
-    start();
-  });
-}
-
-function start(){
-  if (typeof window !== 'undefined' && typeof window.document !== 'undefined')
-    window.requestAnimationFrame(loop); //electron
-  else
-    setTimeout(loop, 1000 / 60 ); //Node.js
-}
-
-start();
-```
-
-</details>
-			
+	
 #### `rumble(option?: obj): void`
 
 This function is used to activate the vibration function of a controller.<br />
@@ -905,6 +889,8 @@ Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this
 
 <hr>
 
+⚠️ **The following are only available under the `promises` namespace.**
+
 <details><summary>Identify device (VID,PID,GUID,Name, ...)</summary>
 
 XInput doesn't provide VID/PID **by design**.<br />
@@ -935,7 +921,7 @@ Return only XInput gamepad.
 
 💡 obj are unique by their vid/pid
 
-Output example with a DS4(wireless + cable) and ds4windows(_DirectInput -> XInput wrapper_):
+Output example with a DS4(wireless) and ds4windows(XInput wrapper):
 ```js
 import { identify } from "xinput-ffi/promises";
 await identify();
@@ -983,3 +969,98 @@ await identify();
 ```
 
 </details>
+
+<hr>
+
+<details><summary>High level implementation of XInput</summary>
+
+This is a high level implementation of XInput to get the gamepad's input on the fly in a human readable way.
+This serves as an example to demonstrate how to use the XInput functions and helpers based around them.
+The purpose of this class is to drive a simple navigation menu system with a XInput compatible controller (real XInput or through XInput emulation).
+
+This leverages the new Node.js timersPromises setInterval() to keep the event loop alive and do the gamepad polling.
+
+#### `XInputGamepad(): Class`
+
+> This class extends EventEmitter from node:events
+
+**Options**
+
+- hz?: number (30)
+
+  This will determinate the polling rate. Usually 60hz (1000/60 = ~16ms) is used. If I'm not mistaken this is what the Chrome browser uses. But for our use case we don't need to poll that fast so it defaults to 30hz (~33ms). Increasing this value improves latency, but may cause a loss in performance due to more CPU time spent.
+
+- multitap?: boolean (true)
+
+  Scan for all 4 XInput slots to find any Gamepad. Set to false to only poll XInput slot 0 and potentially reduce the number of FFI calls per gamepad tick (event loop).
+
+- joystickAsDPAD?: boolean (true)
+
+  Convert the left joystick analog axis to DPAD buttons. For our use case, driving a simple navigation menu, this is useful.
+
+- inputFeedback?: boolean (false)
+  
+  Vibrate shortly and lightly on any button activation. This is just for fun and/or debug.
+
+**Events**
+
+`input(buttons: string[])`
+
+List of activated buttons (human readable).<br />
+A button is "activated" on press (button down) then release (button up).
+
+💡 NB: Triggers axis are converted into non standard XInput button name : `GAMEPAD_LEFT_TRIGGER` and `GAMEPAD_RIGHT_TRIGGER`.
+
+<details><summary>XInput Button names:</summary>
+
+```
+"XINPUT_GAMEPAD_DPAD_UP",
+"XINPUT_GAMEPAD_DPAD_DOWN",
+"XINPUT_GAMEPAD_DPAD_LEFT",
+"XINPUT_GAMEPAD_DPAD_RIGHT",
+"XINPUT_GAMEPAD_START",
+"XINPUT_GAMEPAD_BACK",
+"XINPUT_GAMEPAD_LEFT_THUMB",
+"XINPUT_GAMEPAD_RIGHT_THUMB",
+"XINPUT_GAMEPAD_LEFT_SHOULDER",
+"XINPUT_GAMEPAD_RIGHT_SHOULDER",
+"XINPUT_GAMEPAD_GUIDE",
+"XINPUT_GAMEPAD_A",
+"XINPUT_GAMEPAD_B",
+"XINPUT_GAMEPAD_X",
+"XINPUT_GAMEPAD_Y"
+```
+
+💡 NB: XInput constants are available under the `constants` namespace.
+
+```js
+import { constants } from "xinput-ffi";
+//or
+import { BUTTONS } from "xinput-ffi/constants";
+```
+
+</details>
+  
+**Methods**
+
+`poll()`
+
+Start the gamepad event loop. This will keep the Nods.js event loop going.
+
+❌ Will throw on unexpected error.
+
+`stop()`
+
+Stop the gamepad event loop.
+
+`pause()`
+
+This function is meant to be called when an application loses focus.
+
+_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
+
+`resume()`
+
+This function is meant to be called when an application gains focus.
+
+_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
