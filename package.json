@@ -1,7 +1,7 @@
 {
   "name": "xinput-ffi",
-  "version": "3.0.0",
-  "description": "XInput and XInputOnGameInput FFI wrapper: access native XInput functions as well as some helpers based around them.",
+  "version": "3.1.0",
+  "description": "XInput FFI wrapper: access native XInput functions as well as some helpers based around them.",
   "type": "module",
   "exports": {
     ".": {

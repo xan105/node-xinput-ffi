@@ -2,7 +2,7 @@ import { XInputGamepad } from "../lib/promises.js";
 
 const gamepad = new XInputGamepad({
   hz: 30,
-  inputForceFeedback: true
+  inputFeedback: true
 });
 
 gamepad.on("input", (buttons)=>{ 
