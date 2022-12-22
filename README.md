@@ -1045,7 +1045,7 @@ import { BUTTONS } from "xinput-ffi/constants";
 
 `poll()`
 
-Start the gamepad event loop. This will keep the Nods.js event loop going.
+Start the gamepad event loop. This will keep the Node.js event loop going.
 
 ❌ Will throw on unexpected error.
 
@@ -1064,3 +1064,19 @@ _cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf
 This function is meant to be called when an application gains focus.
 
 _cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
+
+**Example**
+
+```js
+import { XInputGamepad } from "xinput-ffi";
+
+const gamepad = new XInputGamepad({ hz: 60 });
+
+gamepad.on("input", (buttons)=>{ 
+  setImmediate(() => {
+    console.log(buttons);
+  });
+});
+
+gamepad.poll();
+```
