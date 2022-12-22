@@ -168,23 +168,23 @@ mainWin.once("ready-to-show", async() => {
   mainWin.show();
   mainWin.focus();
   
- });
+});
 
-  //gain/loose focus
-  mainWin.on("blur", () => {
-    gamepad?.pause();
-  });
-  mainWin.on("focus", () => {
-    gamepad?.resume();
-  });
+//gain/loose focus
+mainWin.on("blur", () => {
+  gamepad?.pause();
+});
+mainWin.on("focus", () => {
+  gamepad?.resume();
+});
 
-  //clean up
-  mainWin.on("closed", () => {
-    mainWin = null;
-    gamepad?.removeAllListeners();
-    gamepad?.stop();
-    gamepad = null;
-  });
+//clean up
+mainWin.on("closed", () => {
+  mainWin = null;
+  gamepad?.removeAllListeners();
+  gamepad?.stop();
+  gamepad = null;
+});
 
 ```
 
@@ -412,7 +412,7 @@ getCapabilities({translate: false});
 
 📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
 
-### `getKeystroke(option?: number | object): object`
+#### `getKeystroke(option?: number | object): object`
 
 Retrieves a gamepad input event.<br/>
 To be honest, this isn't really useful since the chatpad feature wasn't implemented on Windows.<br/>
@@ -988,7 +988,7 @@ This leverages the new Node.js timersPromises setInterval() to keep the event lo
 
 - hz?: number (30)
 
-  This will determinate the polling rate. Usually 60hz (1000/60 = ~16ms) is used. If I'm not mistaken this is what the Chrome browser uses. But for our use case we don't need to poll that fast so it defaults to 30hz (~33ms). Increasing this value improves latency, but may cause a loss in performance due to more CPU time spent.
+  This will determinate the polling rate. Usually 60hz (1000/60 = ~16ms) is used. If I'm not mistaken this is what the Chrome browser uses. But for our use case we don't need to poll that fast so it defaults to 30hz (~33ms). Increasing this value improves latency, but may cause a loss in performance due to more CPU time spent. The max accepted is 250hz (4ms).
 
 - multitap?: boolean (true)
 
