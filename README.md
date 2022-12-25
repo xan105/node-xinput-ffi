@@ -179,13 +179,17 @@ mainWin.on("focus", () => {
 });
 
 //clean up
-mainWin.on("closed", () => {
-  mainWin = null;
+mainWin.on("close", () => {
   gamepad?.removeAllListeners();
   gamepad?.stop();
-  gamepad = null;
+  gamepad = null; //deref
 });
 
+mainWin.on("closed", () => {
+  mainWin = null; //deref
+});
+
+mainWin.loadFile(path/to/file);
 ```
 
 contextBridge (preload)
