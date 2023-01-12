@@ -157,10 +157,10 @@ mainWin.once("ready-to-show", async() => {
   const { XInputGamepad } = await import("xinput-ffi/promises");
   gamepad = new XInputGamepad();
   
-  //send single input to renderer (no combo btn)
+  //send input to renderer
   gamepad.on("input", (buttons)=>{ 
     setImmediate(() => {
-      mainWin.webContents.send("onGamepadInput", buttons[0]); 
+      mainWin.webContents.send("onGamepadInput", buttons); 
     });
   });
   
@@ -204,7 +204,7 @@ renderer
 
 ```js
 window.ipcRenderer.onGamepadInput((event, input) => {
-    switch(input){
+    switch(input[0]){
       case "XINPUT_GAMEPAD_DPAD_UP":
         //do something
         break;
@@ -1044,32 +1044,8 @@ import { BUTTONS } from "xinput-ffi/constants";
 ```
 
 </details>
-  
-**Methods**
 
-`poll()`
-
-Start the gamepad event loop. This will keep the Node.js event loop going.
-
-❌ Will throw on unexpected error.
-
-`stop()`
-
-Stop the gamepad event loop.
-
-`pause()`
-
-This function is meant to be called when an application loses focus.
-
-_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
-
-`resume()`
-
-This function is meant to be called when an application gains focus.
-
-_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
-
-**Example**
+Example:
 
 ```js
 import { XInputGamepad } from "xinput-ffi";
@@ -1084,3 +1060,27 @@ gamepad.on("input", (buttons)=>{
 
 gamepad.poll();
 ```
+  
+**Methods**
+
+##### `poll()`
+
+Start the gamepad event loop. This will keep the Node.js event loop going.
+
+❌ Will throw on unexpected error.
+
+##### `stop()`
+
+Stop the gamepad event loop.
+
+##### `pause()`
+
+This function is meant to be called when an application loses focus.
+
+_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
+
+##### `resume()`
+
+This function is meant to be called when an application gains focus.
+
+_cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_

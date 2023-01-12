@@ -21,8 +21,4 @@ gamepad.on("input", (buttons)=>{
   });
 });
 
-try{
-  gamepad.poll();
-}catch(err){
-  console.error(err);
-}
+gamepad.poll();
