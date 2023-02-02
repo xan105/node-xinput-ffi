@@ -38,11 +38,11 @@ export function getButtonsDown(option?: OptionsA): Promise<{
 }>;
 
 declare interface OptionsB {
-  gamepad: number,
-  force: number | number[],
-  duration: number,
-  forceEnableGamepad: boolean,
-  forceStateWhileRumble: boolean
+  gamepad?: number,
+  force?: number | number[],
+  duration?: number,
+  forceEnableGamepad?: boolean,
+  forceStateWhileRumble?: boolean
 }
 
 export function rumble(option?: OptionsB): Promise<void>;

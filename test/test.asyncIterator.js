@@ -21,4 +21,10 @@ gamepad.on("input", (buttons)=>{
   });
 });
 
-gamepad.poll();
+console.log("Start");
+gamepad.vibrate()
+.then(()=>{
+  console.log("Press any button ...");
+  gamepad.poll();
+})
+.catch(console.error);

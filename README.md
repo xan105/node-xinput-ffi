@@ -984,7 +984,7 @@ The purpose of this class is to drive a simple navigation menu system with a XIn
 
 This leverages the new Node.js timersPromises setInterval() to keep the event loop alive and do the gamepad polling.
 
-#### `XInputGamepad(): Class`
+#### `XInputGamepad(option: object): Class`
 
 > This class extends EventEmitter from node:events
 
@@ -1010,10 +1010,10 @@ This leverages the new Node.js timersPromises setInterval() to keep the event lo
 
 `input(buttons: string[])`
 
-List of activated buttons (human readable).<br />
+List of activated buttons (human readable) of the first controller found.<br />
 A button is "activated" on press (button down) then release (button up).
 
-💡 NB: Triggers axis are converted into non standard XInput button name : `GAMEPAD_LEFT_TRIGGER` and `GAMEPAD_RIGHT_TRIGGER`.
+💡 NB: Triggers axis are converted into non standard XInput button name : `GAMEPAD_LEFT_TRIGGER` and `GAMEPAD_RIGHT_TRIGGER` (_on/off behavior_).
 
 <details><summary>XInput Button names:</summary>
 
@@ -1084,3 +1084,11 @@ _cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf
 This function is meant to be called when an application gains focus.
 
 _cf: [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)_
+
+#### `vibrate(option: object): Promise<void>`
+
+Vibrate the first controller found. Shorthand to the helper fn `rumble()`.
+
+💡 Expose only `force` and `duration` options of `rumble()`.
+
+❌ Will throw on error other than `ERROR_DEVICE_NOT_CONNECTED`.

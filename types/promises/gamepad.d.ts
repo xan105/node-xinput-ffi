@@ -11,7 +11,7 @@ export class XInputGamepad extends EventEmitter {
     stop(): void;
     resume(): void;
     pause(): void;
-    eventLoop(): Promise<void>;
+    vibrate(option?: {force?: number | number[], duration?: number}): Promise<void>;
     #private;
 }
 import { EventEmitter } from "events";
