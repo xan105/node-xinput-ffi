@@ -50,7 +50,7 @@
     "email": "dev.xan105@outlook.be",
     "url": "https://xan105.com/"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xan105/node-xinput-ffi.git"
@@ -76,7 +76,7 @@
   "dependencies": {
     "@xan105/error": "^1.4.3",
     "@xan105/is": "^2.7.1",
-    "koffi": "^2.1.5"
+    "koffi": "^2.3.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.15",
