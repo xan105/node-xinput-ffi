@@ -74,8 +74,9 @@
     }
   ],
   "dependencies": {
-    "@xan105/error": "^1.4.3",
-    "@xan105/is": "^2.7.1",
+    "@xan105/error": "^1.5.0",
+    "@xan105/ffi": "^0.3.0",
+    "@xan105/is": "^2.8.0",
     "koffi": "^2.3.4"
   },
   "devDependencies": {

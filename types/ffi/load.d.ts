@@ -1,5 +1,1 @@
-declare interface Options {
-  XInputOnGameInput?: boolean
-}
-
-export function dlopen(option: Options): (...args: unknown[]) => any;
+export function dlopenEx(api: string, versions: string[], symbols: object): object;
