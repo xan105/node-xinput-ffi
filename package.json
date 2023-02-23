@@ -1,6 +1,6 @@
 {
   "name": "xinput-ffi",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "XInput FFI wrapper: access native XInput functions as well as some helpers based around them.",
   "type": "module",
   "exports": {
@@ -74,9 +74,9 @@
     }
   ],
   "dependencies": {
-    "@xan105/error": "^1.5.0",
-    "@xan105/ffi": "^0.3.0",
-    "@xan105/is": "^2.8.0",
+    "@xan105/error": "^1.6.0",
+    "@xan105/ffi": "^0.4.1",
+    "@xan105/is": "^2.8.1",
     "koffi": "^2.3.4"
   },
   "devDependencies": {
