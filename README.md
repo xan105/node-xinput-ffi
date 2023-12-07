@@ -515,7 +515,7 @@ getState({translate: false});
 ```
 
 💡 Thumbsticks: as explained by Microsoft you should [implement dead zone correctly](https://docs.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput#dead-zone).<br/>
-This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-obj-obj)
+This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput-ffi#getbuttonsdown-option-object-object)
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 
@@ -541,7 +541,7 @@ NB:
 - You need to keep the event-loop alive otherwise the vibration will terminate with your program.<br />
 - You need to reset the state to 0 for both frequency before using setState again.<br />
 
-Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-obj-void)
+Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#rumble-option-object-void)
 
 📖 [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate)
 
@@ -885,7 +885,7 @@ Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, i
 Use `identify()` (see below) to query `WMI _Win32_PNPEntity` to scan for known gamepads.<br />
 It won't tell you which is connected to which XInput slot tho.
 
-#### `identify(option?: obj): Promise<obj[]>`
+#### `identify(option?: object): Promise<object[]>`
 
 ⚠️ Requires PowerShell.
 
@@ -897,7 +897,7 @@ List all **known** HID and USB connected devices **by matching with entries in**
 
 Return only XInput gamepad.
 
-=> Return an array of obj where
+=> Return an array of object where
 - string name : device name
 - string manufacturer : vendor name
 - number vendorID : vendor id
@@ -906,7 +906,7 @@ Return only XInput gamepad.
 - string[] guid: classguid(s) found
 - boolean xinput: a XInput device or not
 
-💡 obj are unique by their vid/pid
+💡 object are unique by their vid/pid
 
 Output example with a DS4(wireless) and ds4windows(XInput wrapper):
 ```js
