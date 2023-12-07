@@ -1,4 +1,4 @@
-import { getButtonsDown } from "../lib/promises.js";
+import { getButtonsDown } from "../lib/index.js";
 
 let state = {
   previous : {
@@ -19,11 +19,11 @@ function loop(){
 
   getButtonsDown()
   .then((controller)=>{
-		
+    
     state.current = controller;
-		
+    
     if (state.current.packetNumber > state.previous.packetNumber){ //State update
-		
+    
       //Buttons
       if(pressRelease === true){ //"keyup"
         //check against the previous buttons state
@@ -38,14 +38,14 @@ function loop(){
         console.log("trigger L " + state.current.trigger.left.force);
       if (state.current.trigger.right.active) 
         console.log("trigger R " + state.current.trigger.right.force);
-			
+      
       //JY
       if (state.current.thumb.left.direction.length > 0)
         console.log(state.current.thumb.left.direction, Math.ceil( state.current.thumb.left.magnitude * 100 ) + "% (J LEFT)");
       if (state.current.thumb.right.direction.length > 0)
         console.log(state.current.thumb.right.direction, Math.ceil( state.current.thumb.right.magnitude * 100 ) + "% (J RIGHT)");
-		}
-		
+    }
+    
     state.previous = state.current;  //store previous state
   })
   .catch((err)=>{

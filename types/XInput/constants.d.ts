@@ -1,7 +1,4 @@
-export namespace XUSER_MAX_COUNT {
-    const XInput: number;
-    const XInputOnGameInput: number;
-}
+export const XUSER_MAX_COUNT: 4;
 export const XUSER_INDEX_ANY: 255;
 export const MOTOR_SPEED: 65535;
 export const RUMBLE_DURATION: 2500;

@@ -1,7 +1,7 @@
 About
 =====
 
-XInput FFI wrapper: access native XInput functions as well as some helpers based around them.
+Access native XInput functions as well as some helpers based around them.
 
 This lib hooks directly to the system's dll (xinput1_4.dll, xinput1_3.dll or xinput9_1_0.dll).<br/>
 It aims to implement and expose XInput functions as close as possible to the document.<br/>
@@ -11,8 +11,8 @@ It aims to implement and expose XInput functions as close as possible to the doc
 Examples
 ========
 
-Vibration (_helper fn_)
-
+<details>
+  <summary>- Vibration via helper function</summary>
 ```js
 import { rumble } from "xinput-ffi";
 
@@ -26,20 +26,14 @@ await rumble({force: 100});
 //and high-frequency rumble motor (right) at 25%
 await rumble({force: [50,25]});
 ```
+</details>
 
-Promise
-
+<details>
+  <summary>- XInput function</summary>
 ```js
-import { rumble } from "xinput-ffi/promises";
-await rumble({force: 50}); 
-```
+import * as XInput from "xinput-ffi";
 
-Direct use of XInput function
-
-```js
-import { promises as XInput } from "xinput-ffi";
-
-const capabilities = await XInput.getCapabilities();
+const capabilities = await XInput.getCapabilities({translate: true});
 console.log(capabilities);
 /* Output:
 {
@@ -63,37 +57,12 @@ console.log(capabilities);
 }
 */
 ```
+</details>
 
-If you prefer the raw data instead:
-
+<details>
+  <summary>- "Hidden" XInput function</summary>
 ```js
-import { promises as XInput } from "xinput-ffi";
-
-const capabilities = await XInput.getCapabilities({translate: false});
-console.log(capabilities);
-/* Output:
-{
-  type: 1,
-  subType: 1,
-  flags: 12,
-  gamepad: {
-    wButtons: 62463,
-    bLeftTrigger: 255,
-    bRightTrigger: 255,
-    sThumbLX: -64,
-    sThumbLY: -64,
-    sThumbRX: -64,
-    sThumbRY: -64
-  },
-  vibration: { wLeftMotorSpeed: 255, wRightMotorSpeed: 255 }
-}
-*/
-```
-
-"Hidden" XInput function
-
-```js
-import { promises as XInput } from "xinput-ffi";
+import * as XInput from "xinput-ffi";
 
 const state = await XInput.getStateEx();
 console.log(state);
@@ -112,11 +81,12 @@ console.log(state);
 }
 */
 ```
+</details>
 
-Misc
-
+<details>
+  <summary>- Miscellaneous</summary>
 ```js 
-import { promises as XInput } from "xinput-ffi";
+import * as XInput from "xinput-ffi";
 
 //Check connected status for all controller
 console.log(await XInput.listConnected());
@@ -141,12 +111,16 @@ console.log (await XInput.identify({XInputOnly: true}));
   ]
 */
 ```
+</details>
 
 ### Electron
 
+<details>
+  <summary>- simple XInput menu navigation</summary>
+  
 Here is an example of a simple XInput menu navigation system using the high level XInput implementation found in this module (helper).
 
-main process
++ main process
 
 ```js
 
@@ -180,7 +154,6 @@ mainWin.on("focus", () => {
 
 //clean up
 mainWin.on("close", () => {
-  gamepad?.removeAllListeners();
   gamepad?.stop();
   gamepad = null; //deref
 });
@@ -192,7 +165,7 @@ mainWin.on("closed", () => {
 mainWin.loadFile(path/to/file);
 ```
 
-contextBridge (preload)
++  contextBridge (preload)
 
 ```js
 contextBridge.exposeInMainWorld("ipcRenderer", {
@@ -200,7 +173,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
 });
 ```
 
-renderer
++ renderer
 
 ```js
 window.ipcRenderer.onGamepadInput((event, input) => {
@@ -214,6 +187,8 @@ window.ipcRenderer.onGamepadInput((event, input) => {
   });
 ```
 
+</details>
+
 Installation
 ============
 
@@ -221,33 +196,32 @@ Installation
 npm install xinput-ffi
 ```
 
-_Prerequisite: C/C++ build tools and [CMake meta build system](https://cmake.org/) in order to build [koffi](https://www.npmjs.com/package/koffi)._<br/>
-_💡 Prebuilt binaries are provided so in most cases the above mentioned prerequisites aren't needed._
-
 API
 ===
 
 ⚠️ This module is only available as an ECMAScript module (ESM) starting with version 2.0.0.<br />
 Previous version(s) are CommonJS (CJS) with an ESM wrapper.
 
-💡 Promises are under the `promises` namespace.
-```js
-import * as XInput from "xinput-ffi";
-XInput.promises.isConnected() //Promise
-XInput.isConnected() //Sync
-
-import * as XInput from "xinput-ffi/promises"
-XInput.isConnected() //Promise
-
-import { promises as XInput } from "xinput-ffi";
-XInput.isConnected() //Promise
-```
-
 ## Named export
 
-<details><summary>XInput fn</summary>
+### `const constants = object`
 
-Access XInput functions as documented by Microsoft.<br/>
+  XInput controller constants for convenience.
+  
+```js  
+  import { constants } from "xinput-ffi";
+  console.log(constants.XUSER_MAX_COUNT); //4
+```
+  
+💡 Also available under its own namespace.
+  
+```js
+  import { XUSER_MAX_COUNT } from "xinput-ffi/constants";
+  console.log(XUSER_MAX_COUNT); //4
+```
+
+### XInput function
+
 📖 [Microsoft documentation](https://docs.microsoft.com/en-us/windows/win32/xinput/functions)
 
 - ✔️ [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
@@ -271,7 +245,7 @@ Access XInput functions as documented by Microsoft.<br/>
 
 NB: Depending on which XInput dll version you are using *(1_4, 1_3, 9_1_0)* some functions won't be available.
 
-#### `enable(enable: boolean): void`
+#### `enable(enable: boolean): Promise<void>`
 
 Enable/Disable all XInput gamepads.<br/>
 This function is meant to be called when an application gains or loses focus.
@@ -282,7 +256,7 @@ NB:
  
 📖 [XInputEnable](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputenable)
  
-#### `getBatteryInformation(option?: number | object): object`
+#### `getBatteryInformation(option?: number | object): Promise<object>`
 
 Retrieves the battery type and charge status of a wireless controller.
 
@@ -330,7 +304,7 @@ getBatteryInformation({translate: false});
 
 📖 [XInputGetBatteryInformation](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetbatteryinformation)
 
-#### `getCapabilities(option?: number | object): object`
+#### `getCapabilities(option?: number | object): Promise<object>`
 
 Retrieves the capabilities and features of the specified controller.
 
@@ -416,7 +390,7 @@ getCapabilities({translate: false});
 
 📖 [XInputGetCapabilities](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetcapabilities)
 
-#### `getKeystroke(option?: number | object): object`
+#### `getKeystroke(option?: number | object): Promise<object>`
 
 Retrieves a gamepad input event.<br/>
 To be honest, this isn't really useful since the chatpad feature wasn't implemented on Windows.<br/>
@@ -467,7 +441,7 @@ getKeystroke({translate: false});
 
 📖 [XInputGetKeystroke](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetkeystroke)
 
-#### `getState(option?: number | obj): obj`
+#### `getState(option?: number | object): Promise<object>`
 
 Retrieves the current state of the specified controller.
 
@@ -529,7 +503,7 @@ This is done for you in [getButtonsDown()](https://github.com/xan105/node-xinput
 
 📖 [XInputGetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 
-#### `setState(lowFrequency: number, highFrequency: number, option ?: number | object): void`
+#### `setState(lowFrequency: number, highFrequency: number, option ?: number | object): Promise<void>`
 
 Sends data to a connected controller. This function is used to activate the vibration function of a controller.
 
@@ -555,7 +529,7 @@ Both are done for you with [rumble()](https://github.com/xan105/node-xinput-ffi#
 
 📖 [XInputSetState](https://docs.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputsetstate)
 
-#### `getStateEx(option?: number | object): object`
+#### `getStateEx(option?: number | object): Promise<object>`
 
 The same as `XInputGetState`, adding the "Guide" button (0x0400).
 
@@ -612,7 +586,7 @@ getStateEx({translate: false});
 }
 ```
 
-#### `waitForGuideButton(option?: number | object): void`
+#### `waitForGuideButton(option?: number | object): Promise<void>`
 
 Wait until Guide button is pressed.
 
@@ -630,7 +604,7 @@ It's not clear on how to get the async option to report.
 
 💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
-#### `cancelGuideButtonWait(option?: number | object): void`
+#### `cancelGuideButtonWait(option?: number | object): Promise<void>`
 
 If `XInputWaitForGuideButton` was activated in async mode, this will stop it.
 
@@ -642,7 +616,7 @@ Index of the user's controller. Can be a value from 0 to 3.
 
 💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
-#### `powerOffController(option?: number | object): void`
+#### `powerOffController(option?: number | object): Promise<void>`
 
 Power off a controller.
 
@@ -654,7 +628,7 @@ Index of the user's controller. Can be a value from 0 to 3.
 
 💡 If `option` is a number it will be used as dwUserIndex.<br/>
 
-#### `getBaseBusInformation(option?: number | object): object`
+#### `getBaseBusInformation(option?: number | object): Promise<object>`
 
 ⚠️ Not working on all gamepads. It can refuse and return `ERROR_DEVICE_NOT_CONNECTED`, even if connected.
 
@@ -682,7 +656,7 @@ struct XINPUT_BASE_BUS_INFORMATION
  }
 ```
 
-#### `getCapabilitiesEx(option?: number | object): object`
+#### `getCapabilitiesEx(option?: number | object): Promise<object>`
 
 The same as `XInputGetCapabilities` but with added properties such as vendorID and productID.
 
@@ -776,23 +750,21 @@ getCapabilitiesEx({translate: false});
 
 </details>
 
-<hr>
-
-<details><summary>Helper fn</summary>
+### Helper functions
 
 The following are sugar/helper functions based upon the previous XInput functions.
 
-#### `isConnected(gamepad?: number): boolean`
+#### `isConnected(gamepad?: number): Promise<boolean>`
 
 Whether the specified controller is connected or not.<br />
 Returns true/false.
 
-#### `listConnected(): boolean[]`
+#### `listConnected(): Promise<boolean[]>`
 
 Returns an array of connected status for all controller.<br />
 eg: [true,false,false,false] => Only 1st gamepad is connected
 
-#### `getButtonsDown(option?: obj): obj`
+#### `getButtonsDown(option?: object): Promise<object>`
 
 Normalize `getState()` information for convenience:<br/> 
 ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
@@ -809,7 +781,7 @@ Index of the user's controller. Can be a value from 0 to 3.
 
 Thumbstick deadzone(s):<br/>
 Either an integer (both thumbstick with the same value) or an array of 2 integer: [left,right]<br/>
-	    
+      
 - directionThreshold?: number (0.2)
 
 float [0.0,1.0] to handle cardinal direction.<br/>
@@ -819,7 +791,7 @@ differentiate the 2 axes by using range of [-threshold,threshold].
 
 💡 If you **just** want "RIGHT", "LEFT", "UP" and "DOWN" the easiest way is to set this to `0.8` with the default deadzone.<br/>
 Alternatively play with this value and/or deadzone to decide on a thresold and ignore when `direction[]` has a length of 2.
-		      
+          
 - triggerThreshold?: number (30)
 
 Trigger activation threshold. Range [0,255].
@@ -828,13 +800,13 @@ Trigger activation threshold. Range [0,255].
 - int packetNumber : dwPacketNumber; This value is increased every time the state of the controller has changed.
 - []string buttons : list of currently pressed [buttons](https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad#members)
 - trigger.left/right :
-	+ boolean active : is the trigger pressed down ? (below triggerThreshold will not set active to true)
-	+ int force : by how much ? [0,255]
+  + boolean active : is the trigger pressed down ? (below triggerThreshold will not set active to true)
+  + int force : by how much ? [0,255]
 - thumb.left/right :
-	+ float x: normalized (deadzone) x axis [0.0,1.0]. 0 is centered. Negative values is left. Positive values is right.
-	+ float y: normalized (deadzone) y axis [0.0,1.0]. 0 is centered. Negative values is down. Positive values is up.
-	+ float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
-	+ []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
+  + float x: normalized (deadzone) x axis [0.0,1.0]. 0 is centered. Negative values is left. Positive values is right.
+  + float y: normalized (deadzone) y axis [0.0,1.0]. 0 is centered. Negative values is down. Positive values is up.
+  + float magnitude: normalized (deadzone) magnitude [0.0,1.0] (by how far is the thumbstick from the center ? 1 is fully pushed).
+  + []string direction: Human readable direction of the thumbstick. eg: ["UP", "RIGHT"]. See directionThreshold above for details.
 
 ```js
 {
@@ -860,8 +832,8 @@ Trigger activation threshold. Range [0,255].
   }
 }
 ```
-	
-#### `rumble(option?: obj): void`
+  
+#### `rumble(option?: object): Promise<void>`
 
 This function is used to activate the vibration function of a controller.<br />
 
@@ -889,13 +861,7 @@ Use `enable()` to force the activation of XInput gamepad before vibration.
 Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this when a 3rd party reset your state or whatever.<br/> 
 ⚠️ Usage of this option is not recommended use only when needed.
 
-</details>
-
-<hr>
-
-⚠️ **The following are only available under the `promises` namespace.**
-
-<details><summary>Identify device (VID,PID,GUID,Name, ...)</summary>
+### Identify device | VID/PID
 
 XInput doesn't provide VID/PID **by design**.<br />
 Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller (real one or through XInput emulation).<br />
@@ -972,11 +938,7 @@ await identify();
 ]
 ```
 
-</details>
-
-<hr>
-
-<details><summary>High level implementation of XInput</summary>
+### High level implementation of XInput
 
 This is a high level implementation of XInput to get the gamepad's input on the fly in a human readable way.
 This serves as an example to demonstrate how to use the XInput functions and helpers based around them.
@@ -1072,6 +1034,8 @@ Start the gamepad event loop. This will keep the Node.js event loop going.
 ##### `stop()`
 
 Stop the gamepad event loop.
+
+NB: This method will remove every event listener.
 
 ##### `pause()`
 

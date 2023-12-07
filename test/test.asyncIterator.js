@@ -1,4 +1,4 @@
-import { XInputGamepad } from "../lib/promises.js";
+import { XInputGamepad } from "../lib/index.js";
 
 const gamepad = new XInputGamepad({
   hz: 30,
