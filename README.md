@@ -782,7 +782,7 @@ eg: [true,false,false,false] => Only 1st gamepad is connected
 
 #### `getButtonsDown(option?: object): Promise<object>`
 
-Normalize `getState()` information for convenience:<br/> 
+Normalize `getState()/getStateEx()` information for convenience:<br/> 
 ThumbStick position, magnitude, direction (taking the deadzone into account).<br/> 
 Trigger state and force (taking threshold into account).<br/>
 Which buttons are pressed if any.<br/>
@@ -889,7 +889,7 @@ It won't tell you which is connected to which XInput slot tho.
 
 ⚠️ Requires PowerShell.
 
-List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
+List all **known** HID and USB connected devices **by matching with entries in** `./lib/util/HardwareID.js`
 
 ⚙️ options:
 
