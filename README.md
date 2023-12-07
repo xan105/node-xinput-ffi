@@ -12,7 +12,8 @@ Examples
 ========
 
 <details>
-  <summary>- Vibration via helper function</summary>
+  <summary>Vibration via helper function</summary>
+  
 ```js
 import { rumble } from "xinput-ffi";
 
@@ -26,10 +27,12 @@ await rumble({force: 100});
 //and high-frequency rumble motor (right) at 25%
 await rumble({force: [50,25]});
 ```
+
 </details>
 
 <details>
-  <summary>- XInput function</summary>
+  <summary>XInput function</summary>
+  
 ```js
 import * as XInput from "xinput-ffi";
 
@@ -57,10 +60,12 @@ console.log(capabilities);
 }
 */
 ```
+
 </details>
 
 <details>
-  <summary>- "Hidden" XInput function</summary>
+  <summary>"Hidden" XInput function</summary>
+  
 ```js
 import * as XInput from "xinput-ffi";
 
@@ -81,10 +86,12 @@ console.log(state);
 }
 */
 ```
+
 </details>
 
 <details>
-  <summary>- Miscellaneous</summary>
+  <summary>Miscellaneous</summary>
+  
 ```js 
 import * as XInput from "xinput-ffi";
 
@@ -111,6 +118,7 @@ console.log (await XInput.identify({XInputOnly: true}));
   ]
 */
 ```
+
 </details>
 
 ### Electron
@@ -203,6 +211,14 @@ API
 Previous version(s) are CommonJS (CJS) with an ESM wrapper.
 
 ## Named export
+
+Summary:
+
+- [constants](#const-constants--object)
+- [XInput function](#xinput-function)
+- [Helper functions](#helper-functions)
+- [Identify device | VID/PID](#identify-device--vidpid)
+- [High level implementation of XInput](#high-level-implementation-of-xinput)
 
 ### `const constants = object`
 
@@ -865,12 +881,13 @@ Bruteforce _-ly_ (spam) `setState()` for the duration of the vibration. Use this
 
 XInput doesn't provide VID/PID **by design**.<br />
 Even if with `XInputGetCapabilitiesEx` you can get the vendorID and productID, it will most likely be a Xbox Controller (real one or through XInput emulation).<br />
-Use this to query `WMI _Win32_PNPEntity` to scan for known gamepads.<br />
+
+Use `identify()` (see below) to query `WMI _Win32_PNPEntity` to scan for known gamepads.<br />
 It won't tell you which is connected to which XInput slot tho.
 
 #### `identify(option?: obj): Promise<obj[]>`
 
-⚠️ Promise only and requires PowerShell.
+⚠️ Requires PowerShell.
 
 List all **known** HID and USB connected devices **by matching with entries in** `./lib/data/HardwareID.js`
 
