@@ -136,7 +136,7 @@ let gamepad;
 
 mainWin.once("ready-to-show", async() => { 
 
-  const { XInputGamepad } = await import("xinput-ffi/promises");
+  const { XInputGamepad } = await import("xinput-ffi");
   gamepad = new XInputGamepad();
   
   //send input to renderer
@@ -298,9 +298,9 @@ Returns an object like a 📖 [XINPUT_BATTERY_INFORMATION](https://docs.microsof
 
 Example
 ```js
-getBatteryInformation();
-getBatteryInformation(0);
-getBatteryInformation({dwUserIndex: 0});
+await getBatteryInformation();
+await getBatteryInformation(0);
+await getBatteryInformation({dwUserIndex: 0});
 //output
 {
   batteryType: 'BATTERY_TYPE_WIRED',
@@ -310,7 +310,7 @@ getBatteryInformation({dwUserIndex: 0});
 
 If you want raw data output
 ```js
-getBatteryInformation({translate: false});
+await getBatteryInformation({translate: false});
 //output
 {
   batteryType: 1,
@@ -347,9 +347,9 @@ Returns an object like a 📖 [XINPUT_CAPABILITIES](https://docs.microsoft.com/e
 
 Example
 ```js
-getCapabilities();
-getCapabilities(0);
-getCapabilities({gamepadIndex: 0});
+await getCapabilities();
+await getCapabilities(0);
+await getCapabilities({gamepadIndex: 0});
 //Output
 {
   type: 'XINPUT_DEVTYPE_GAMEPAD',
@@ -385,7 +385,7 @@ getCapabilities({gamepadIndex: 0});
 
 If you want raw data output
 ```js
-getCapabilities({translate: false});
+await getCapabilities({translate: false});
 //output
 {
   type: 1,
@@ -429,9 +429,9 @@ Returns an object like a 📖 [XINPUT_KEYSTROKE](https://docs.microsoft.com/en-u
 
 Example
 ```js
-getKeystroke();
-getKeystroke(0);
-getKeystroke({dwUserIndex: 0});
+await getKeystroke();
+await getKeystroke(0);
+await getKeystroke({dwUserIndex: 0});
 //Output
 {
   virtualKey: 'VK_PAD_A',
@@ -444,7 +444,7 @@ getKeystroke({dwUserIndex: 0});
 
 If you want raw data output
 ```js
-getKeystroke({translate: false});
+await getKeystroke({translate: false});
 //output
 { 
   virtualKey: 22528, 
@@ -478,9 +478,9 @@ Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/wi
 
 Example
 ```js
-getState();
-getState(0);
-getState({dwUserIndex: 0});
+await getState();
+await getState(0);
+await getState({dwUserIndex: 0});
 //Output
 {
   dwPacketNumber: 18165,
@@ -498,7 +498,7 @@ getState({dwUserIndex: 0});
 
 If you want raw data output
 ```js
-getState({translate: false});
+await getState({translate: false});
 //output
 {
   dwPacketNumber: 322850,
@@ -566,9 +566,9 @@ Returns an object like a 📖 [XINPUT_STATE](https://docs.microsoft.com/en-us/wi
 
 Example
 ```js
-getStateEx();
-getStateEx(0);
-getStateEx({dwUserIndex: 0});
+await getStateEx();
+await getStateEx(0);
+await getStateEx({dwUserIndex: 0});
 //Output
 {
   dwPacketNumber: 18165,
@@ -586,7 +586,7 @@ getStateEx({dwUserIndex: 0});
 
 If you want raw data output
 ```js
-getStateEx({translate: false});
+await getStateEx({translate: false});
 //output
 {
   dwPacketNumber: 322850,
@@ -694,9 +694,9 @@ See below for details.
 
 Example
 ```js
-getCapabilitiesEx();
-getCapabilitiesEx(0);
-getCapabilitiesEx({gamepadIndex: 0});
+await getCapabilitiesEx();
+await getCapabilitiesEx(0);
+await getCapabilitiesEx({gamepadIndex: 0});
 //Output
 {
   capabilities: {
@@ -737,7 +737,7 @@ getCapabilitiesEx({gamepadIndex: 0});
 
 If you want raw data output
 ```js
-getCapabilitiesEx({translate: false});
+await getCapabilitiesEx({translate: false});
 //output
 {
   capabilities: {
@@ -910,7 +910,7 @@ Return only XInput gamepad.
 
 Output example with a DS4(wireless) and ds4windows(XInput wrapper):
 ```js
-import { identify } from "xinput-ffi/promises";
+import { identify } from "xinput-ffi";
 await identify();
 //Output
 [
@@ -1017,9 +1017,9 @@ A button is "activated" on press (button down) then release (button up).
 💡 NB: XInput constants are available under the `constants` namespace.
 
 ```js
-import { constants } from "xinput-ffi";
-//or
 import { BUTTONS } from "xinput-ffi/constants";
+//or
+import { constants } from "xinput-ffi"
 ```
 
 </details>
