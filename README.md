@@ -124,7 +124,7 @@ console.log (await XInput.identify({XInputOnly: true}));
 ### Electron
 
 <details>
-  <summary>- simple XInput menu navigation</summary>
+  <summary>Simple XInput menu navigation</summary>
   
 Here is an example of a simple XInput menu navigation system using the high level XInput implementation found in this module (helper).
 
