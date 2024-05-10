@@ -349,7 +349,7 @@ Example
 ```js
 await getCapabilities();
 await getCapabilities(0);
-await getCapabilities({gamepadIndex: 0});
+await getCapabilities({dwUserIndex: 0});
 //Output
 {
   type: 'XINPUT_DEVTYPE_GAMEPAD',
@@ -696,7 +696,7 @@ Example
 ```js
 await getCapabilitiesEx();
 await getCapabilitiesEx(0);
-await getCapabilitiesEx({gamepadIndex: 0});
+await getCapabilitiesEx({dwUserIndex: 0});
 //Output
 {
   capabilities: {
